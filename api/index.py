@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 import json
-from .optimizer import main as run_optimizer
- 
+from optimizer import main as run_optimizer
+
 app = Flask(__name__)
 
 @app.route('/api/optimize', methods=['POST'])
