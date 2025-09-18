@@ -1,0 +1,1871 @@
+{
+  "summary": {
+    "baselineTotalCost": 16719.06
+  },
+  "baselineSolution": {
+    "total_cost": 16719.06,
+    "layouts": {
+      "base_flyer-a5": {
+        "total_cost": 8355.01484,
+        "net_sheets": 1667,
+        "machine": {
+          "id": "eb225886-e5dd-46a6-a30b-4e66d39c4cc4",
+          "name": "Heidelberg SM52 4c 2",
+          "printingBodies": 4,
+          "maxSheetSize": {
+            "width": 360,
+            "length": 520
+          },
+          "overage": {
+            "amount": 50,
+            "perInk": true
+          },
+          "minImpressionsCharge": 1000,
+          "setupCost": {
+            "price": 700,
+            "perInk": true,
+            "perInkPass": false
+          },
+          "washCost": {
+            "price": 0,
+            "perInk": false,
+            "perInkPass": false
+          },
+          "impressionCost": {
+            "price": 180,
+            "perInk": false,
+            "perInkPass": false
+          }
+        },
+        "printing_sheet": {
+          "width": 510,
+          "length": 240
+        },
+        "costBreakdown": {
+          "materialCost": 2154.8948399999995,
+          "printingCost": {
+            "setupCost": 5600,
+            "washCost": 0,
+            "impressionCost": 600.12,
+            "totalPrintingCost": 6200.12
+          }
+        },
+        "materialNeeds": {
+          "totalMaterialCost": 2154.8948399999995,
+          "factorySheets": {
+            "size": {
+              "width": 720,
+              "length": 1020,
+              "usdPerTon": 1400
+            },
+            "quantityNeeded": 345,
+            "cuttingPlan": {
+              "cutsPerSheet": 6,
+              "positions": [
+                {
+                  "x": 0,
+                  "y": 0,
+                  "width": 240,
+                  "length": 510
+                },
+                {
+                  "x": 240,
+                  "y": 0,
+                  "width": 240,
+                  "length": 510
+                },
+                {
+                  "x": 480,
+                  "y": 0,
+                  "width": 240,
+                  "length": 510
+                },
+                {
+                  "x": 0,
+                  "y": 510,
+                  "width": 240,
+                  "length": 510
+                },
+                {
+                  "x": 240,
+                  "y": 510,
+                  "width": 240,
+                  "length": 510
+                },
+                {
+                  "x": 480,
+                  "y": 510,
+                  "width": 240,
+                  "length": 510
+                }
+              ]
+            }
+          }
+        },
+        "printNeeds": {
+          "technique": "DUPLEX",
+          "totalPlates": 8,
+          "passes": 2
+        },
+        "jobs_in_layout": {
+          "flyer-a5": 3
+        },
+        "placements": [
+          {
+            "x": 0,
+            "y": 0,
+            "width": 148,
+            "length": 210
+          },
+          {
+            "x": 148,
+            "y": 0,
+            "width": 148,
+            "length": 210
+          },
+          {
+            "x": 296,
+            "y": 0,
+            "width": 148,
+            "length": 210
+          }
+        ],
+        "layout_id": "base_flyer-a5"
+      },
+      "base_tarjeta-9x5": {
+        "total_cost": 6509.654336,
+        "net_sheets": 1000,
+        "machine": {
+          "id": "eb225886-e5dd-46a6-a30b-4e66d39c4cc4",
+          "name": "Heidelberg SM52 4c 2",
+          "printingBodies": 4,
+          "maxSheetSize": {
+            "width": 360,
+            "length": 520
+          },
+          "overage": {
+            "amount": 50,
+            "perInk": true
+          },
+          "minImpressionsCharge": 1000,
+          "setupCost": {
+            "price": 700,
+            "perInk": true,
+            "perInkPass": false
+          },
+          "washCost": {
+            "price": 0,
+            "perInk": false,
+            "perInkPass": false
+          },
+          "impressionCost": {
+            "price": 180,
+            "perInk": false,
+            "perInkPass": false
+          }
+        },
+        "printing_sheet": {
+          "width": 255,
+          "length": 180
+        },
+        "costBreakdown": {
+          "materialCost": 549.654336,
+          "printingCost": {
+            "setupCost": 5600,
+            "washCost": 0,
+            "impressionCost": 360.0,
+            "totalPrintingCost": 5960.0
+          }
+        },
+        "materialNeeds": {
+          "totalMaterialCost": 549.654336,
+          "factorySheets": {
+            "size": {
+              "width": 720,
+              "length": 1020,
+              "usdPerTon": 1400
+            },
+            "quantityNeeded": 88,
+            "cuttingPlan": {
+              "cutsPerSheet": 16,
+              "positions": [
+                {
+                  "x": 0,
+                  "y": 0,
+                  "width": 180,
+                  "length": 255
+                },
+                {
+                  "x": 180,
+                  "y": 0,
+                  "width": 180,
+                  "length": 255
+                },
+                {
+                  "x": 360,
+                  "y": 0,
+                  "width": 180,
+                  "length": 255
+                },
+                {
+                  "x": 540,
+                  "y": 0,
+                  "width": 180,
+                  "length": 255
+                },
+                {
+                  "x": 0,
+                  "y": 255,
+                  "width": 180,
+                  "length": 255
+                },
+                {
+                  "x": 180,
+                  "y": 255,
+                  "width": 180,
+                  "length": 255
+                },
+                {
+                  "x": 360,
+                  "y": 255,
+                  "width": 180,
+                  "length": 255
+                },
+                {
+                  "x": 540,
+                  "y": 255,
+                  "width": 180,
+                  "length": 255
+                },
+                {
+                  "x": 0,
+                  "y": 510,
+                  "width": 180,
+                  "length": 255
+                },
+                {
+                  "x": 180,
+                  "y": 510,
+                  "width": 180,
+                  "length": 255
+                },
+                {
+                  "x": 360,
+                  "y": 510,
+                  "width": 180,
+                  "length": 255
+                },
+                {
+                  "x": 540,
+                  "y": 510,
+                  "width": 180,
+                  "length": 255
+                },
+                {
+                  "x": 0,
+                  "y": 765,
+                  "width": 180,
+                  "length": 255
+                },
+                {
+                  "x": 180,
+                  "y": 765,
+                  "width": 180,
+                  "length": 255
+                },
+                {
+                  "x": 360,
+                  "y": 765,
+                  "width": 180,
+                  "length": 255
+                },
+                {
+                  "x": 540,
+                  "y": 765,
+                  "width": 180,
+                  "length": 255
+                }
+              ]
+            }
+          }
+        },
+        "printNeeds": {
+          "technique": "DUPLEX",
+          "totalPlates": 8,
+          "passes": 2
+        },
+        "jobs_in_layout": {
+          "tarjeta-9x5": 10
+        },
+        "placements": [
+          {
+            "x": 0,
+            "y": 0,
+            "width": 50,
+            "length": 90
+          },
+          {
+            "x": 50,
+            "y": 0,
+            "width": 50,
+            "length": 90
+          },
+          {
+            "x": 100,
+            "y": 0,
+            "width": 50,
+            "length": 90
+          },
+          {
+            "x": 150,
+            "y": 0,
+            "width": 50,
+            "length": 90
+          },
+          {
+            "x": 200,
+            "y": 0,
+            "width": 50,
+            "length": 90
+          },
+          {
+            "x": 0,
+            "y": 90,
+            "width": 50,
+            "length": 90
+          },
+          {
+            "x": 50,
+            "y": 90,
+            "width": 50,
+            "length": 90
+          },
+          {
+            "x": 100,
+            "y": 90,
+            "width": 50,
+            "length": 90
+          },
+          {
+            "x": 150,
+            "y": 90,
+            "width": 50,
+            "length": 90
+          },
+          {
+            "x": 200,
+            "y": 90,
+            "width": 50,
+            "length": 90
+          }
+        ],
+        "layout_id": "base_tarjeta-9x5"
+      },
+      "base_sticker-7x7": {
+        "total_cost": 1854.3872319999998,
+        "net_sheets": 572,
+        "machine": {
+          "id": "eb225886-e5dd-46a6-a30b-4e66d39c4cc4",
+          "name": "Heidelberg SM52 4c 2",
+          "printingBodies": 4,
+          "maxSheetSize": {
+            "width": 360,
+            "length": 520
+          },
+          "overage": {
+            "amount": 50,
+            "perInk": true
+          },
+          "minImpressionsCharge": 1000,
+          "setupCost": {
+            "price": 700,
+            "perInk": true,
+            "perInkPass": false
+          },
+          "washCost": {
+            "price": 0,
+            "perInk": false,
+            "perInkPass": false
+          },
+          "impressionCost": {
+            "price": 180,
+            "perInk": false,
+            "perInkPass": false
+          }
+        },
+        "printing_sheet": {
+          "width": 510,
+          "length": 360
+        },
+        "costBreakdown": {
+          "materialCost": 974.3872319999998,
+          "printingCost": {
+            "setupCost": 700,
+            "washCost": 0,
+            "impressionCost": 180.0,
+            "totalPrintingCost": 880.0
+          }
+        },
+        "materialNeeds": {
+          "totalMaterialCost": 974.3872319999998,
+          "factorySheets": {
+            "size": {
+              "width": 720,
+              "length": 1020,
+              "usdPerTon": 1400
+            },
+            "quantityNeeded": 156,
+            "cuttingPlan": {
+              "cutsPerSheet": 4,
+              "positions": [
+                {
+                  "x": 0,
+                  "y": 0,
+                  "width": 360,
+                  "length": 510
+                },
+                {
+                  "x": 360,
+                  "y": 0,
+                  "width": 360,
+                  "length": 510
+                },
+                {
+                  "x": 0,
+                  "y": 510,
+                  "width": 360,
+                  "length": 510
+                },
+                {
+                  "x": 360,
+                  "y": 510,
+                  "width": 360,
+                  "length": 510
+                }
+              ]
+            }
+          }
+        },
+        "printNeeds": {
+          "technique": "SIMPLEX",
+          "totalPlates": 1,
+          "passes": 1
+        },
+        "jobs_in_layout": {
+          "sticker-7x7": 35
+        },
+        "placements": [
+          {
+            "x": 0,
+            "y": 0,
+            "width": 70,
+            "length": 70
+          },
+          {
+            "x": 70,
+            "y": 0,
+            "width": 70,
+            "length": 70
+          },
+          {
+            "x": 140,
+            "y": 0,
+            "width": 70,
+            "length": 70
+          },
+          {
+            "x": 210,
+            "y": 0,
+            "width": 70,
+            "length": 70
+          },
+          {
+            "x": 280,
+            "y": 0,
+            "width": 70,
+            "length": 70
+          },
+          {
+            "x": 350,
+            "y": 0,
+            "width": 70,
+            "length": 70
+          },
+          {
+            "x": 420,
+            "y": 0,
+            "width": 70,
+            "length": 70
+          },
+          {
+            "x": 0,
+            "y": 70,
+            "width": 70,
+            "length": 70
+          },
+          {
+            "x": 70,
+            "y": 70,
+            "width": 70,
+            "length": 70
+          },
+          {
+            "x": 140,
+            "y": 70,
+            "width": 70,
+            "length": 70
+          },
+          {
+            "x": 210,
+            "y": 70,
+            "width": 70,
+            "length": 70
+          },
+          {
+            "x": 280,
+            "y": 70,
+            "width": 70,
+            "length": 70
+          },
+          {
+            "x": 350,
+            "y": 70,
+            "width": 70,
+            "length": 70
+          },
+          {
+            "x": 420,
+            "y": 70,
+            "width": 70,
+            "length": 70
+          },
+          {
+            "x": 0,
+            "y": 140,
+            "width": 70,
+            "length": 70
+          },
+          {
+            "x": 70,
+            "y": 140,
+            "width": 70,
+            "length": 70
+          },
+          {
+            "x": 140,
+            "y": 140,
+            "width": 70,
+            "length": 70
+          },
+          {
+            "x": 210,
+            "y": 140,
+            "width": 70,
+            "length": 70
+          },
+          {
+            "x": 280,
+            "y": 140,
+            "width": 70,
+            "length": 70
+          },
+          {
+            "x": 350,
+            "y": 140,
+            "width": 70,
+            "length": 70
+          },
+          {
+            "x": 420,
+            "y": 140,
+            "width": 70,
+            "length": 70
+          },
+          {
+            "x": 0,
+            "y": 210,
+            "width": 70,
+            "length": 70
+          },
+          {
+            "x": 70,
+            "y": 210,
+            "width": 70,
+            "length": 70
+          },
+          {
+            "x": 140,
+            "y": 210,
+            "width": 70,
+            "length": 70
+          },
+          {
+            "x": 210,
+            "y": 210,
+            "width": 70,
+            "length": 70
+          },
+          {
+            "x": 280,
+            "y": 210,
+            "width": 70,
+            "length": 70
+          },
+          {
+            "x": 350,
+            "y": 210,
+            "width": 70,
+            "length": 70
+          },
+          {
+            "x": 420,
+            "y": 210,
+            "width": 70,
+            "length": 70
+          },
+          {
+            "x": 0,
+            "y": 280,
+            "width": 70,
+            "length": 70
+          },
+          {
+            "x": 70,
+            "y": 280,
+            "width": 70,
+            "length": 70
+          },
+          {
+            "x": 140,
+            "y": 280,
+            "width": 70,
+            "length": 70
+          },
+          {
+            "x": 210,
+            "y": 280,
+            "width": 70,
+            "length": 70
+          },
+          {
+            "x": 280,
+            "y": 280,
+            "width": 70,
+            "length": 70
+          },
+          {
+            "x": 350,
+            "y": 280,
+            "width": 70,
+            "length": 70
+          },
+          {
+            "x": 420,
+            "y": 280,
+            "width": 70,
+            "length": 70
+          }
+        ],
+        "layout_id": "base_sticker-7x7"
+      }
+    }
+  },
+  "gangedSolutions": [
+    {
+      "summary": {
+        "gangedTotalCost": 10020.49
+      },
+      "productionPlan": [
+        {
+          "id": "ganging_242_eb225886-e5dd-46a6-a30b-4e66d39c4cc4",
+          "sheets": 2858,
+          "costForThisPlanItem": 10020.5
+        }
+      ],
+      "layouts": {
+        "ganging_242_eb225886-e5dd-46a6-a30b-4e66d39c4cc4": {
+          "layoutId": "ganging_242_eb225886-e5dd-46a6-a30b-4e66d39c4cc4",
+          "sheetsToPrint": 2858,
+          "machine": {
+            "id": "eb225886-e5dd-46a6-a30b-4e66d39c4cc4",
+            "name": "Heidelberg SM52 4c 2",
+            "printingBodies": 4,
+            "maxSheetSize": {
+              "width": 360,
+              "length": 520
+            },
+            "overage": {
+              "amount": 50,
+              "perInk": true
+            },
+            "minImpressionsCharge": 1000,
+            "setupCost": {
+              "price": 700,
+              "perInk": true,
+              "perInkPass": false
+            },
+            "washCost": {
+              "price": 0,
+              "perInk": false,
+              "perInkPass": false
+            },
+            "impressionCost": {
+              "price": 180,
+              "perInk": false,
+              "perInkPass": false
+            }
+          },
+          "printingSheet": {
+            "width": 360,
+            "length": 340
+          },
+          "costBreakdown": {
+            "materialCost": 3391.6170959999995,
+            "printingCost": {
+              "setupCost": 5600,
+              "washCost": 0,
+              "impressionCost": 1028.88,
+              "totalPrintingCost": 6628.88
+            }
+          },
+          "materialNeeds": {
+            "totalMaterialCost": 3391.6170959999995,
+            "factorySheets": {
+              "size": {
+                "width": 720,
+                "length": 1020,
+                "usdPerTon": 1400
+              },
+              "quantityNeeded": 543,
+              "cuttingPlan": {
+                "cutsPerSheet": 6,
+                "positions": [
+                  {
+                    "x": 0,
+                    "y": 0,
+                    "width": 360,
+                    "length": 340
+                  },
+                  {
+                    "x": 360,
+                    "y": 0,
+                    "width": 360,
+                    "length": 340
+                  },
+                  {
+                    "x": 0,
+                    "y": 340,
+                    "width": 360,
+                    "length": 340
+                  },
+                  {
+                    "x": 360,
+                    "y": 340,
+                    "width": 360,
+                    "length": 340
+                  },
+                  {
+                    "x": 0,
+                    "y": 680,
+                    "width": 360,
+                    "length": 340
+                  },
+                  {
+                    "x": 360,
+                    "y": 680,
+                    "width": 360,
+                    "length": 340
+                  }
+                ]
+              }
+            }
+          },
+          "printNeeds": {
+            "technique": "DUPLEX",
+            "totalPlates": 8,
+            "passes": 2
+          },
+          "jobsInLayout": [
+            {
+              "id": "flyer-a5",
+              "quantityPerSheet": 2
+            },
+            {
+              "id": "tarjeta-9x5",
+              "quantityPerSheet": 4
+            },
+            {
+              "id": "sticker-7x7",
+              "quantityPerSheet": 7
+            }
+          ],
+          "placements": [
+            {
+              "id": "flyer-a5",
+              "x": 0,
+              "y": 0,
+              "width": 148,
+              "length": 210
+            },
+            {
+              "id": "flyer-a5",
+              "x": 148,
+              "y": 0,
+              "width": 210,
+              "length": 148
+            },
+            {
+              "id": "sticker-7x7",
+              "x": 0,
+              "y": 210,
+              "width": 70,
+              "length": 70
+            },
+            {
+              "id": "sticker-7x7",
+              "x": 70,
+              "y": 210,
+              "width": 70,
+              "length": 70
+            },
+            {
+              "id": "sticker-7x7",
+              "x": 140,
+              "y": 210,
+              "width": 70,
+              "length": 70
+            },
+            {
+              "id": "sticker-7x7",
+              "x": 210,
+              "y": 148,
+              "width": 70,
+              "length": 70
+            },
+            {
+              "id": "sticker-7x7",
+              "x": 280,
+              "y": 148,
+              "width": 70,
+              "length": 70
+            },
+            {
+              "id": "sticker-7x7",
+              "x": 210,
+              "y": 218,
+              "width": 70,
+              "length": 70
+            },
+            {
+              "id": "sticker-7x7",
+              "x": 280,
+              "y": 218,
+              "width": 70,
+              "length": 70
+            },
+            {
+              "id": "tarjeta-9x5",
+              "x": 0,
+              "y": 288,
+              "width": 90,
+              "length": 50
+            },
+            {
+              "id": "tarjeta-9x5",
+              "x": 90,
+              "y": 288,
+              "width": 90,
+              "length": 50
+            },
+            {
+              "id": "tarjeta-9x5",
+              "x": 180,
+              "y": 288,
+              "width": 90,
+              "length": 50
+            },
+            {
+              "id": "tarjeta-9x5",
+              "x": 270,
+              "y": 288,
+              "width": 90,
+              "length": 50
+            }
+          ]
+        }
+      }
+    },
+    {
+      "summary": {
+        "gangedTotalCost": 10067.64
+      },
+      "productionPlan": [
+        {
+          "id": "ganging_231_eb225886-e5dd-46a6-a30b-4e66d39c4cc4",
+          "sheets": 2000,
+          "costForThisPlanItem": 10067.64
+        }
+      ],
+      "layouts": {
+        "ganging_231_eb225886-e5dd-46a6-a30b-4e66d39c4cc4": {
+          "layoutId": "ganging_231_eb225886-e5dd-46a6-a30b-4e66d39c4cc4",
+          "sheetsToPrint": 2000,
+          "machine": {
+            "id": "eb225886-e5dd-46a6-a30b-4e66d39c4cc4",
+            "name": "Heidelberg SM52 4c 2",
+            "printingBodies": 4,
+            "maxSheetSize": {
+              "width": 360,
+              "length": 520
+            },
+            "overage": {
+              "amount": 50,
+              "perInk": true
+            },
+            "minImpressionsCharge": 1000,
+            "setupCost": {
+              "price": 700,
+              "perInk": true,
+              "perInkPass": false
+            },
+            "washCost": {
+              "price": 0,
+              "perInk": false,
+              "perInkPass": false
+            },
+            "impressionCost": {
+              "price": 180,
+              "perInk": false,
+              "perInkPass": false
+            }
+          },
+          "printingSheet": {
+            "width": 510,
+            "length": 360
+          },
+          "costBreakdown": {
+            "materialCost": 3747.643199999999,
+            "printingCost": {
+              "setupCost": 5600,
+              "washCost": 0,
+              "impressionCost": 720.0,
+              "totalPrintingCost": 6320.0
+            }
+          },
+          "materialNeeds": {
+            "totalMaterialCost": 3747.643199999999,
+            "factorySheets": {
+              "size": {
+                "width": 720,
+                "length": 1020,
+                "usdPerTon": 1400
+              },
+              "quantityNeeded": 600,
+              "cuttingPlan": {
+                "cutsPerSheet": 4,
+                "positions": [
+                  {
+                    "x": 0,
+                    "y": 0,
+                    "width": 360,
+                    "length": 510
+                  },
+                  {
+                    "x": 360,
+                    "y": 0,
+                    "width": 360,
+                    "length": 510
+                  },
+                  {
+                    "x": 0,
+                    "y": 510,
+                    "width": 360,
+                    "length": 510
+                  },
+                  {
+                    "x": 360,
+                    "y": 510,
+                    "width": 360,
+                    "length": 510
+                  }
+                ]
+              }
+            }
+          },
+          "printNeeds": {
+            "technique": "DUPLEX",
+            "totalPlates": 8,
+            "passes": 2
+          },
+          "jobsInLayout": [
+            {
+              "id": "flyer-a5",
+              "quantityPerSheet": 3
+            },
+            {
+              "id": "tarjeta-9x5",
+              "quantityPerSheet": 5
+            },
+            {
+              "id": "sticker-7x7",
+              "quantityPerSheet": 10
+            }
+          ],
+          "placements": [
+            {
+              "id": "flyer-a5",
+              "x": 0,
+              "y": 0,
+              "width": 148,
+              "length": 210
+            },
+            {
+              "id": "flyer-a5",
+              "x": 0,
+              "y": 210,
+              "width": 210,
+              "length": 148
+            },
+            {
+              "id": "flyer-a5",
+              "x": 148,
+              "y": 0,
+              "width": 148,
+              "length": 210
+            },
+            {
+              "id": "sticker-7x7",
+              "x": 210,
+              "y": 210,
+              "width": 70,
+              "length": 70
+            },
+            {
+              "id": "sticker-7x7",
+              "x": 210,
+              "y": 280,
+              "width": 70,
+              "length": 70
+            },
+            {
+              "id": "sticker-7x7",
+              "x": 280,
+              "y": 210,
+              "width": 70,
+              "length": 70
+            },
+            {
+              "id": "sticker-7x7",
+              "x": 280,
+              "y": 280,
+              "width": 70,
+              "length": 70
+            },
+            {
+              "id": "sticker-7x7",
+              "x": 350,
+              "y": 0,
+              "width": 70,
+              "length": 70
+            },
+            {
+              "id": "sticker-7x7",
+              "x": 420,
+              "y": 0,
+              "width": 70,
+              "length": 70
+            },
+            {
+              "id": "sticker-7x7",
+              "x": 296,
+              "y": 70,
+              "width": 70,
+              "length": 70
+            },
+            {
+              "id": "sticker-7x7",
+              "x": 296,
+              "y": 140,
+              "width": 70,
+              "length": 70
+            },
+            {
+              "id": "sticker-7x7",
+              "x": 366,
+              "y": 70,
+              "width": 70,
+              "length": 70
+            },
+            {
+              "id": "sticker-7x7",
+              "x": 436,
+              "y": 70,
+              "width": 70,
+              "length": 70
+            },
+            {
+              "id": "tarjeta-9x5",
+              "x": 366,
+              "y": 140,
+              "width": 90,
+              "length": 50
+            },
+            {
+              "id": "tarjeta-9x5",
+              "x": 456,
+              "y": 140,
+              "width": 50,
+              "length": 90
+            },
+            {
+              "id": "tarjeta-9x5",
+              "x": 366,
+              "y": 190,
+              "width": 90,
+              "length": 50
+            },
+            {
+              "id": "tarjeta-9x5",
+              "x": 456,
+              "y": 230,
+              "width": 50,
+              "length": 90
+            },
+            {
+              "id": "tarjeta-9x5",
+              "x": 350,
+              "y": 240,
+              "width": 90,
+              "length": 50
+            }
+          ]
+        }
+      }
+    },
+    {
+      "summary": {
+        "gangedTotalCost": 10484.0
+      },
+      "productionPlan": [
+        {
+          "id": "base_sticker-7x7",
+          "sheets": 572,
+          "costForThisPlanItem": 1854.39
+        },
+        {
+          "id": "ganging_5_eb225886-e5dd-46a6-a30b-4e66d39c4cc4",
+          "sheets": 1250,
+          "costForThisPlanItem": 8629.63
+        }
+      ],
+      "layouts": {
+        "base_sticker-7x7": {
+          "layoutId": "base_sticker-7x7",
+          "sheetsToPrint": 572,
+          "machine": {
+            "id": "eb225886-e5dd-46a6-a30b-4e66d39c4cc4",
+            "name": "Heidelberg SM52 4c 2",
+            "printingBodies": 4,
+            "maxSheetSize": {
+              "width": 360,
+              "length": 520
+            },
+            "overage": {
+              "amount": 50,
+              "perInk": true
+            },
+            "minImpressionsCharge": 1000,
+            "setupCost": {
+              "price": 700,
+              "perInk": true,
+              "perInkPass": false
+            },
+            "washCost": {
+              "price": 0,
+              "perInk": false,
+              "perInkPass": false
+            },
+            "impressionCost": {
+              "price": 180,
+              "perInk": false,
+              "perInkPass": false
+            }
+          },
+          "printingSheet": {
+            "width": 510,
+            "length": 360
+          },
+          "costBreakdown": {
+            "materialCost": 974.3872319999998,
+            "printingCost": {
+              "setupCost": 700,
+              "washCost": 0,
+              "impressionCost": 180.0,
+              "totalPrintingCost": 880.0
+            }
+          },
+          "materialNeeds": {
+            "totalMaterialCost": 974.3872319999998,
+            "factorySheets": {
+              "size": {
+                "width": 720,
+                "length": 1020,
+                "usdPerTon": 1400
+              },
+              "quantityNeeded": 156,
+              "cuttingPlan": {
+                "cutsPerSheet": 4,
+                "positions": [
+                  {
+                    "x": 0,
+                    "y": 0,
+                    "width": 360,
+                    "length": 510
+                  },
+                  {
+                    "x": 360,
+                    "y": 0,
+                    "width": 360,
+                    "length": 510
+                  },
+                  {
+                    "x": 0,
+                    "y": 510,
+                    "width": 360,
+                    "length": 510
+                  },
+                  {
+                    "x": 360,
+                    "y": 510,
+                    "width": 360,
+                    "length": 510
+                  }
+                ]
+              }
+            }
+          },
+          "printNeeds": {
+            "technique": "SIMPLEX",
+            "totalPlates": 1,
+            "passes": 1
+          },
+          "jobsInLayout": [
+            {
+              "id": "sticker-7x7",
+              "quantityPerSheet": 35
+            }
+          ],
+          "placements": [
+            {
+              "x": 0,
+              "y": 0,
+              "width": 70,
+              "length": 70
+            },
+            {
+              "x": 70,
+              "y": 0,
+              "width": 70,
+              "length": 70
+            },
+            {
+              "x": 140,
+              "y": 0,
+              "width": 70,
+              "length": 70
+            },
+            {
+              "x": 210,
+              "y": 0,
+              "width": 70,
+              "length": 70
+            },
+            {
+              "x": 280,
+              "y": 0,
+              "width": 70,
+              "length": 70
+            },
+            {
+              "x": 350,
+              "y": 0,
+              "width": 70,
+              "length": 70
+            },
+            {
+              "x": 420,
+              "y": 0,
+              "width": 70,
+              "length": 70
+            },
+            {
+              "x": 0,
+              "y": 70,
+              "width": 70,
+              "length": 70
+            },
+            {
+              "x": 70,
+              "y": 70,
+              "width": 70,
+              "length": 70
+            },
+            {
+              "x": 140,
+              "y": 70,
+              "width": 70,
+              "length": 70
+            },
+            {
+              "x": 210,
+              "y": 70,
+              "width": 70,
+              "length": 70
+            },
+            {
+              "x": 280,
+              "y": 70,
+              "width": 70,
+              "length": 70
+            },
+            {
+              "x": 350,
+              "y": 70,
+              "width": 70,
+              "length": 70
+            },
+            {
+              "x": 420,
+              "y": 70,
+              "width": 70,
+              "length": 70
+            },
+            {
+              "x": 0,
+              "y": 140,
+              "width": 70,
+              "length": 70
+            },
+            {
+              "x": 70,
+              "y": 140,
+              "width": 70,
+              "length": 70
+            },
+            {
+              "x": 140,
+              "y": 140,
+              "width": 70,
+              "length": 70
+            },
+            {
+              "x": 210,
+              "y": 140,
+              "width": 70,
+              "length": 70
+            },
+            {
+              "x": 280,
+              "y": 140,
+              "width": 70,
+              "length": 70
+            },
+            {
+              "x": 350,
+              "y": 140,
+              "width": 70,
+              "length": 70
+            },
+            {
+              "x": 420,
+              "y": 140,
+              "width": 70,
+              "length": 70
+            },
+            {
+              "x": 0,
+              "y": 210,
+              "width": 70,
+              "length": 70
+            },
+            {
+              "x": 70,
+              "y": 210,
+              "width": 70,
+              "length": 70
+            },
+            {
+              "x": 140,
+              "y": 210,
+              "width": 70,
+              "length": 70
+            },
+            {
+              "x": 210,
+              "y": 210,
+              "width": 70,
+              "length": 70
+            },
+            {
+              "x": 280,
+              "y": 210,
+              "width": 70,
+              "length": 70
+            },
+            {
+              "x": 350,
+              "y": 210,
+              "width": 70,
+              "length": 70
+            },
+            {
+              "x": 420,
+              "y": 210,
+              "width": 70,
+              "length": 70
+            },
+            {
+              "x": 0,
+              "y": 280,
+              "width": 70,
+              "length": 70
+            },
+            {
+              "x": 70,
+              "y": 280,
+              "width": 70,
+              "length": 70
+            },
+            {
+              "x": 140,
+              "y": 280,
+              "width": 70,
+              "length": 70
+            },
+            {
+              "x": 210,
+              "y": 280,
+              "width": 70,
+              "length": 70
+            },
+            {
+              "x": 280,
+              "y": 280,
+              "width": 70,
+              "length": 70
+            },
+            {
+              "x": 350,
+              "y": 280,
+              "width": 70,
+              "length": 70
+            },
+            {
+              "x": 420,
+              "y": 280,
+              "width": 70,
+              "length": 70
+            }
+          ]
+        },
+        "ganging_5_eb225886-e5dd-46a6-a30b-4e66d39c4cc4": {
+          "layoutId": "ganging_5_eb225886-e5dd-46a6-a30b-4e66d39c4cc4",
+          "sheetsToPrint": 1250,
+          "machine": {
+            "id": "eb225886-e5dd-46a6-a30b-4e66d39c4cc4",
+            "name": "Heidelberg SM52 4c 2",
+            "printingBodies": 4,
+            "maxSheetSize": {
+              "width": 360,
+              "length": 520
+            },
+            "overage": {
+              "amount": 50,
+              "perInk": true
+            },
+            "minImpressionsCharge": 1000,
+            "setupCost": {
+              "price": 700,
+              "perInk": true,
+              "perInkPass": false
+            },
+            "washCost": {
+              "price": 0,
+              "perInk": false,
+              "perInkPass": false
+            },
+            "impressionCost": {
+              "price": 180,
+              "perInk": false,
+              "perInkPass": false
+            }
+          },
+          "printingSheet": {
+            "width": 510,
+            "length": 360
+          },
+          "costBreakdown": {
+            "materialCost": 2579.6277359999995,
+            "printingCost": {
+              "setupCost": 5600,
+              "washCost": 0,
+              "impressionCost": 450.0,
+              "totalPrintingCost": 6050.0
+            }
+          },
+          "materialNeeds": {
+            "totalMaterialCost": 2579.6277359999995,
+            "factorySheets": {
+              "size": {
+                "width": 720,
+                "length": 1020,
+                "usdPerTon": 1400
+              },
+              "quantityNeeded": 413,
+              "cuttingPlan": {
+                "cutsPerSheet": 4,
+                "positions": [
+                  {
+                    "x": 0,
+                    "y": 0,
+                    "width": 360,
+                    "length": 510
+                  },
+                  {
+                    "x": 360,
+                    "y": 0,
+                    "width": 360,
+                    "length": 510
+                  },
+                  {
+                    "x": 0,
+                    "y": 510,
+                    "width": 360,
+                    "length": 510
+                  },
+                  {
+                    "x": 360,
+                    "y": 510,
+                    "width": 360,
+                    "length": 510
+                  }
+                ]
+              }
+            }
+          },
+          "printNeeds": {
+            "technique": "DUPLEX",
+            "totalPlates": 8,
+            "passes": 2
+          },
+          "jobsInLayout": [
+            {
+              "id": "flyer-a5",
+              "quantityPerSheet": 4
+            },
+            {
+              "id": "tarjeta-9x5",
+              "quantityPerSheet": 8
+            }
+          ],
+          "placements": [
+            {
+              "id": "flyer-a5",
+              "x": 0,
+              "y": 0,
+              "width": 148,
+              "length": 210
+            },
+            {
+              "id": "flyer-a5",
+              "x": 0,
+              "y": 210,
+              "width": 210,
+              "length": 148
+            },
+            {
+              "id": "flyer-a5",
+              "x": 148,
+              "y": 0,
+              "width": 148,
+              "length": 210
+            },
+            {
+              "id": "flyer-a5",
+              "x": 210,
+              "y": 210,
+              "width": 210,
+              "length": 148
+            },
+            {
+              "id": "tarjeta-9x5",
+              "x": 420,
+              "y": 0,
+              "width": 90,
+              "length": 50
+            },
+            {
+              "id": "tarjeta-9x5",
+              "x": 420,
+              "y": 50,
+              "width": 90,
+              "length": 50
+            },
+            {
+              "id": "tarjeta-9x5",
+              "x": 420,
+              "y": 100,
+              "width": 90,
+              "length": 50
+            },
+            {
+              "id": "tarjeta-9x5",
+              "x": 420,
+              "y": 150,
+              "width": 90,
+              "length": 50
+            },
+            {
+              "id": "tarjeta-9x5",
+              "x": 420,
+              "y": 200,
+              "width": 90,
+              "length": 50
+            },
+            {
+              "id": "tarjeta-9x5",
+              "x": 420,
+              "y": 250,
+              "width": 90,
+              "length": 50
+            },
+            {
+              "id": "tarjeta-9x5",
+              "x": 420,
+              "y": 300,
+              "width": 90,
+              "length": 50
+            },
+            {
+              "id": "tarjeta-9x5",
+              "x": 296,
+              "y": 0,
+              "width": 90,
+              "length": 50
+            }
+          ]
+        }
+      }
+    },
+    {
+      "summary": {
+        "gangedTotalCost": 10691.54
+      },
+      "productionPlan": [
+        {
+          "id": "ganging_243_eb225886-e5dd-46a6-a30b-4e66d39c4cc4",
+          "sheets": 3334,
+          "costForThisPlanItem": 10691.54
+        }
+      ],
+      "layouts": {
+        "ganging_243_eb225886-e5dd-46a6-a30b-4e66d39c4cc4": {
+          "layoutId": "ganging_243_eb225886-e5dd-46a6-a30b-4e66d39c4cc4",
+          "sheetsToPrint": 3334,
+          "machine": {
+            "id": "eb225886-e5dd-46a6-a30b-4e66d39c4cc4",
+            "name": "Heidelberg SM52 4c 2",
+            "printingBodies": 4,
+            "maxSheetSize": {
+              "width": 360,
+              "length": 520
+            },
+            "overage": {
+              "amount": 50,
+              "perInk": true
+            },
+            "minImpressionsCharge": 1000,
+            "setupCost": {
+              "price": 700,
+              "perInk": true,
+              "perInkPass": false
+            },
+            "washCost": {
+              "price": 0,
+              "perInk": false,
+              "perInkPass": false
+            },
+            "impressionCost": {
+              "price": 180,
+              "perInk": false,
+              "perInkPass": false
+            }
+          },
+          "printingSheet": {
+            "width": 360,
+            "length": 330
+          },
+          "costBreakdown": {
+            "materialCost": 3891.3028559999993,
+            "printingCost": {
+              "setupCost": 5600,
+              "washCost": 0,
+              "impressionCost": 1200.24,
+              "totalPrintingCost": 6800.24
+            }
+          },
+          "materialNeeds": {
+            "totalMaterialCost": 3891.3028559999993,
+            "factorySheets": {
+              "size": {
+                "width": 720,
+                "length": 1020,
+                "usdPerTon": 1400
+              },
+              "quantityNeeded": 623,
+              "cuttingPlan": {
+                "cutsPerSheet": 6,
+                "positions": [
+                  {
+                    "x": 0,
+                    "y": 0,
+                    "width": 360,
+                    "length": 330
+                  },
+                  {
+                    "x": 360,
+                    "y": 0,
+                    "width": 360,
+                    "length": 330
+                  },
+                  {
+                    "x": 0,
+                    "y": 330,
+                    "width": 360,
+                    "length": 330
+                  },
+                  {
+                    "x": 360,
+                    "y": 330,
+                    "width": 360,
+                    "length": 330
+                  },
+                  {
+                    "x": 0,
+                    "y": 660,
+                    "width": 360,
+                    "length": 330
+                  },
+                  {
+                    "x": 360,
+                    "y": 660,
+                    "width": 360,
+                    "length": 330
+                  }
+                ]
+              }
+            }
+          },
+          "printNeeds": {
+            "technique": "DUPLEX",
+            "totalPlates": 8,
+            "passes": 2
+          },
+          "jobsInLayout": [
+            {
+              "id": "flyer-a5",
+              "quantityPerSheet": 2
+            },
+            {
+              "id": "tarjeta-9x5",
+              "quantityPerSheet": 3
+            },
+            {
+              "id": "sticker-7x7",
+              "quantityPerSheet": 6
+            }
+          ],
+          "placements": [
+            {
+              "id": "flyer-a5",
+              "x": 0,
+              "y": 0,
+              "width": 148,
+              "length": 210
+            },
+            {
+              "id": "flyer-a5",
+              "x": 148,
+              "y": 0,
+              "width": 210,
+              "length": 148
+            },
+            {
+              "id": "sticker-7x7",
+              "x": 0,
+              "y": 210,
+              "width": 70,
+              "length": 70
+            },
+            {
+              "id": "sticker-7x7",
+              "x": 70,
+              "y": 210,
+              "width": 70,
+              "length": 70
+            },
+            {
+              "id": "sticker-7x7",
+              "x": 140,
+              "y": 210,
+              "width": 70,
+              "length": 70
+            },
+            {
+              "id": "sticker-7x7",
+              "x": 210,
+              "y": 148,
+              "width": 70,
+              "length": 70
+            },
+            {
+              "id": "sticker-7x7",
+              "x": 280,
+              "y": 148,
+              "width": 70,
+              "length": 70
+            },
+            {
+              "id": "sticker-7x7",
+              "x": 210,
+              "y": 218,
+              "width": 70,
+              "length": 70
+            },
+            {
+              "id": "tarjeta-9x5",
+              "x": 0,
+              "y": 280,
+              "width": 90,
+              "length": 50
+            },
+            {
+              "id": "tarjeta-9x5",
+              "x": 90,
+              "y": 280,
+              "width": 90,
+              "length": 50
+            },
+            {
+              "id": "tarjeta-9x5",
+              "x": 280,
+              "y": 218,
+              "width": 50,
+              "length": 90
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
