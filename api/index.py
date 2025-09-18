@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 import json
-from optimizer import main as run_optimizer #otro comentario nuevo
+from .optimizer import main as run_optimizer #otro comentario nuevo
 
 app = Flask(__name__)
 
