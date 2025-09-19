@@ -169,12 +169,17 @@ def get_printing_needs(job_details, machine):
     passes = 0
     total_plates = 0
 
+    # --- INICIO DE LA MODIFICACIÓN ---
+    # Se añade una comprobación para machine.printingBodies. Si es None, se trata como 0 para evitar errores.
+    printing_bodies = machine.printingBodies or 0
+
     if technique == 'SIMPLEX':
         total_plates = front_inks
-        passes = math.ceil(front_inks / machine.printingBodies) if machine.printingBodies > 0 else float('inf')
+        passes = math.ceil(front_inks / printing_bodies) if printing_bodies > 0 else float('inf')
     else: # DUPLEX
         total_plates = front_inks + back_inks
-        passes = math.ceil(front_inks / machine.printingBodies) + math.ceil(back_inks / machine.printingBodies) if machine.printingBodies > 0 else float('inf')
+        passes = math.ceil(front_inks / printing_bodies) + math.ceil(back_inks / printing_bodies) if printing_bodies > 0 else float('inf')
+    # --- FIN DE LA MODIFICACIÓN ---
     
     return {'technique': technique, 'totalPlates': total_plates, 'passes': passes}
 
@@ -185,12 +190,17 @@ def calculate_printing_cost(machine, print_needs, net_sheets):
     wash_cost = machine.washCost.price * (total_plates if machine.washCost.perInk else passes)
 
     impression_cost = 0
+    # --- INICIO DE LA MODIFICACIÓN ---
+    # Se añade "or 0" para que si minImpressionsCharge es None, se use 0 en el cálculo, evitando el TypeError.
+    min_charge = machine.minImpressionsCharge or 0
+
     if print_needs['technique'] == 'DUPLEX':
-        chargeable_sheets = max(net_sheets, machine.minImpressionsCharge)
+        chargeable_sheets = max(net_sheets, min_charge)
         impression_cost = ((chargeable_sheets / 1000) * machine.impressionCost.price) * 2 # Una por frente, otra por dorso
     else: # SIMPLEX
-        chargeable_sheets = max(net_sheets, machine.minImpressionsCharge)
+        chargeable_sheets = max(net_sheets, min_charge)
         impression_cost = (chargeable_sheets / 1000) * machine.impressionCost.price * passes
+    # --- FIN DE LA MODIFICACIÓN ---
     
     return {
         'setupCost': setup_cost,
