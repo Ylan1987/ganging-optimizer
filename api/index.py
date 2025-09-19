@@ -1,8 +1,17 @@
 from flask import Flask, request, jsonify
 import json
 from .optimizer import main as run_optimizer #otro comentario nuevo
+from flask_cors import CORS
 
 app = Flask(__name__)
+
+origins = [
+    "https://optimizador-ganging-ui.vercel.app",
+    "http://localhost:3000",
+    "http://localhost:5173" # Generalmente usado por Svelte/Vite
+]
+
+CORS(app, origins=origins)
 
 @app.route('/api/optimize', methods=['POST'])
 def optimize_endpoint():
