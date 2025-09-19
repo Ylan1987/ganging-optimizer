@@ -519,8 +519,12 @@ def parse_input_data(raw_data):
         ))
     
     jobs = [Job(material=Material(factorySizes=[FactorySize(**fs) for fs in j['material']['factorySizes']], **{k:v for k,v in j['material'].items() if k != 'factorySizes'}), **{k:v for k,v in j.items() if k != 'material'}) for j in raw_data['jobs']]
-    available_cuts = [AvailableCutMap(forPaperSize=Size(**ac['forPaperSize']), sheetSizes=[Size(**ss) for ss in ac['sheetSizes']]) for ac in raw_data['availableCuts']]
-    
+    available_cuts = [
+        AvailableCutMap(
+            forPaperSize=Size(**ac['forPaperSize']), 
+            sheetSizes=[Size(width=ss['width'], length=ss['length']) for ss in ac['sheetSizes']]
+        ) for ac in raw_data['availableCuts']
+    ]
     return InputData(options, raw_data['commonDetails']['dollarRate'], jobs, machines, available_cuts)
 
 def format_layout_for_output(layout_obj):
