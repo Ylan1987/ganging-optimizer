@@ -65,7 +65,6 @@ class Machine:
     setupCost: CostInfo
     washCost: CostInfo
     impressionCost: CostInfo
-    # Nuevos campos para coincidir con el input
     is_offset: bool
     sheetFeedOrientation: str
     margins: Dict[str, int]
@@ -534,8 +533,16 @@ def parse_input_data(raw_data):
             minImpressionsCharge=m['minImpressionsCharge'],
             setupCost=CostInfo(**m['setupCost']),
             washCost=CostInfo(**m['washCost']),
-            impressionCost=impression_cost_obj
+            impressionCost=impression_cost_obj,
+            is_offset=m['is_offset'],
+            sheetFeedOrientation=m['sheetFeedOrientation'],
+            margins=m['margins'],
+            minSheetSize=Size(**m['minSheetSize']),
+            duplexChargePrice=m['duplexChargePrice'],
+            price_brackets=m['price_brackets'],
+            created_at=m['created_at']
         ))
+
     
     jobs = [Job(material=Material(factorySizes=[FactorySize(**fs) for fs in j['material']['factorySizes']], **{k:v for k,v in j['material'].items() if k != 'factorySizes'}), **{k:v for k,v in j.items() if k != 'material'}) for j in raw_data['jobs']]
     available_cuts = [
