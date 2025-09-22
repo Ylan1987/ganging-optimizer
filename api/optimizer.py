@@ -551,8 +551,15 @@ def parse_input_data(raw_data):
             forPaperSize=Size(**ac['forPaperSize']), 
             sheetSizes=[Size(width=ss['width'], length=ss['length']) for ss in ac['sheetSizes']]
         ) for ac in raw_data['availableCuts']
-    ]
-    return InputData(options, raw_data['commonDetails']['dollarRate'], jobs, machines, available_cuts)
+    ]    
+    return InputData(
+        options=options,
+        commonDetails=raw_data['commonDetails'],
+        jobs=jobs,
+        machines=machines,
+        availableCuts=available_cuts,
+        dollarRate=raw_data['commonDetails']['dollarRate'] # <--- ESTA ES LA LÍNEA QUE FALTA
+    )
 
 def format_layout_for_output(layout_obj):
     """Formatea un objeto de layout para el JSON de salida."""
