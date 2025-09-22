@@ -93,7 +93,7 @@ class AvailableCutMap:
 @dataclass
 class InputData:
     options: Options
-    commonDetails: Dict[str, float]
+    dollarRate: float
     jobs: List[Job]
     machines: List[Machine]
     availableCuts: List[AvailableCutMap]
