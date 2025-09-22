@@ -371,14 +371,19 @@ def generate_candidate_layouts(data: InputData, all_jobs: Dict[str, Job]):
                     packer.add_bin(cut.width, cut.length)
                     packer.pack()
                     
-                    if len(packer[0]) == sum(cand['recipe'].values()):
-                        log(f"      > ÉXITO con tiraje {cand['tiraje']}: {cand['recipe']}")
-                        placements = [{'id': p.rid, 'x': p.x, 'y': p.y, 'width': p.width, 'length': p.height} for p in packer[0]]
-                        champion_layouts.append({
-                            'layout_details': {'jobs': cand['recipe'], 'printing_sheet': cut},
-                            'placements': placements
-                        })
-                        break 
+                    # 1. Primero, verificamos que el packer NO esté vacío.
+                    #    Si lo está, significa que el dibujante falló.
+                    if packer:
+                        # 2. Ahora que sabemos que no está vacío, es seguro acceder a packer[0].
+                        #    Tu lógica original se mueve un nivel adentro.
+                        if len(packer[0]) == sum(cand['recipe'].values()):
+                            log(f"      > ÉXITO con tiraje {cand['tiraje']}: {cand['recipe']}")
+                            placements = [{'id': p.rid, 'x': p.x, 'y': p.y, 'width': p.width, 'length': p.height} for p in packer[0]]
+                            champion_layouts.append({
+                                'layout_details': {'jobs': cand['recipe'], 'printing_sheet': cut},
+                                'placements': placements
+                            })
+                            break
     return champion_layouts
 
 def solve_optimal_plan(data, all_jobs, base_layouts, candidate_layouts):

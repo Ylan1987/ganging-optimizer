@@ -38,17 +38,7 @@
             "width": 720,
             "length": 1020,
             "usdPerTon": 1430
-          },
-          {
-            "width": 210,
-            "length": 297,
-            "usdPerTon": 1430
-          },
-          {
-            "width": 297,
-            "length": 420,
-            "usdPerTon": 1430
-          },
+          }
           {
             "width": 640,
             "length": 880,
@@ -86,16 +76,6 @@
           {
             "width": 720,
             "length": 1020,
-            "usdPerTon": 1430
-          },
-          {
-            "width": 210,
-            "length": 297,
-            "usdPerTon": 1430
-          },
-          {
-            "width": 297,
-            "length": 420,
             "usdPerTon": 1430
           },
           {
