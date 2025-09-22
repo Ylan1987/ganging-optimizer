@@ -519,12 +519,13 @@ def solve_optimal_plan(data, all_jobs, base_layouts, candidate_layouts):
 
 # region PARSEO Y EJECUCIÓN
 def parse_input_data(raw_data):
+    # Reordenamos los argumentos y usamos nombres para mayor claridad
+    # y para evitar futuros errores de orden.
     options = Options(
-        raw_data['options']['timeoutSeconds'], 
-        Penalties(**raw_data['options']['penalties']),
-        raw_data['options'].get('numberOfSolutions', 1)
-    )
-    
+        timeoutSeconds=raw_data['options']['timeoutSeconds'],
+        numberOfSolutions=raw_data['options'].get('numberOfSolutions', 1),
+        penalties=Penalties(**raw_data['options']['penalties'])
+    ) 
     machines = []
     for m in raw_data['machines']:
         impression_cost_data = m['impressionCost']
