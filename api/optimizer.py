@@ -7,9 +7,9 @@ from ortools.sat.python import cp_model
 import rectpack
 from itertools import chain, combinations, product
 from dataclasses import dataclass, field
-from typing import List, Dict
+from typing import List, Dict, Any
 
-# region ESTRUCTURAS DE DATOS
+# region ESTRUCTURAS DE DATOS (Actualizadas para el nuevo Input)
 @dataclass
 class Size:
     width: int
@@ -23,7 +23,7 @@ class FactorySize:
 
 @dataclass
 class Material:
-    id: int
+    id: str # Cambiado a String para aceptar "Obra"
     name: str
     grammage: int
     isSpecialMaterial: bool
@@ -40,7 +40,7 @@ class Job:
     frontInks: int
     backInks: int
     isDuplex: bool
-    samePlatesForBack: bool = False
+    samePlatesForBack: bool
 
 @dataclass
 class Overage:
@@ -49,9 +49,10 @@ class Overage:
 
 @dataclass
 class CostInfo:
-    price: float
+    price: float = 0.0 # Valor por defecto
     perInk: bool = False
     perInkPass: bool = False
+    pricePerThousand: float = 0.0 # Añadido para compatibilidad
 
 @dataclass
 class Machine:
@@ -64,18 +65,26 @@ class Machine:
     setupCost: CostInfo
     washCost: CostInfo
     impressionCost: CostInfo
+    # Nuevos campos para coincidir con el input
+    is_offset: bool
+    sheetFeedOrientation: str
+    margins: Dict[str, int]
+    minSheetSize: Size
+    duplexChargePrice: Any
+    price_brackets: List[Dict[str, Any]]
+    created_at: str
 
 @dataclass
 class Penalties:
-    differentPressSheetPenalty: int = 0
-    differentFactorySheetPenalty: int = 0
-    differentMachinePenalty: int = 0
+    differentMachinePenalty: int
+    differentPressSheetPenalty: int
+    differentFactorySheetPenalty: int
 
 @dataclass
 class Options:
     timeoutSeconds: int
+    numberOfSolutions: int
     penalties: Penalties
-    numberOfSolutions: int = 1
 
 @dataclass
 class AvailableCutMap:
@@ -85,7 +94,7 @@ class AvailableCutMap:
 @dataclass
 class InputData:
     options: Options
-    dollarRate: float
+    commonDetails: Dict[str, float]
     jobs: List[Job]
     machines: List[Machine]
     availableCuts: List[AvailableCutMap]

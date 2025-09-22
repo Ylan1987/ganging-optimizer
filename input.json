@@ -3,9 +3,9 @@
     "timeoutSeconds": 120,
     "numberOfSolutions": 4,
     "penalties": {
+      "differentMachinePenalty": 25,
       "differentPressSheetPenalty": 10,
-      "differentFactorySheetPenalty": 10,
-      "differentMachinePenalty": 25
+      "differentFactorySheetPenalty": 10
     }
   },
   "commonDetails": {
@@ -13,67 +13,99 @@
   },
   "jobs": [
     {
-      "id": "flyer-a5",
+      "id": "nuevo-trabajo 1",
       "width": 148,
       "length": 210,
-      "quantity": 5000,
+      "quantity": 2000,
       "rotatable": true,
       "material": {
-        "id": 1,
-        "name": "Coteado 150g",
-        "grammage": 150,
+        "id": "1",
+        "name": "Obra",
+        "grammage": 80,
         "isSpecialMaterial": false,
         "factorySizes": [
-          { "width": 720, "length": 1020, "usdPerTon": 1400 },
-          { "width": 700, "length": 1000, "usdPerTon": 1400 },
-          { "width": 660, "length": 960, "usdPerTon": 1400 }
+          {
+            "width": 720,
+            "length": 920,
+            "usdPerTon": 1430
+          },
+          {
+            "width": 820,
+            "length": 1180,
+            "usdPerTon": 1430
+          },
+          {
+            "width": 720,
+            "length": 1020,
+            "usdPerTon": 1430
+          },
+          {
+            "width": 210,
+            "length": 297,
+            "usdPerTon": 1430
+          },
+          {
+            "width": 297,
+            "length": 420,
+            "usdPerTon": 1430
+          },
+          {
+            "width": 640,
+            "length": 880,
+            "usdPerTon": 1430
+          }
         ]
       },
       "frontInks": 4,
-      "backInks": 4,
-      "isDuplex": true,
+      "backInks": 0,
+      "isDuplex": false,
       "samePlatesForBack": false
     },
     {
-      "id": "tarjeta-9x5",
-      "width": 90,
-      "length": 50,
-      "quantity": 10000,
+      "id": "nuevo-trabajo 2",
+      "width": 148,
+      "length": 210,
+      "quantity": 1000,
       "rotatable": true,
       "material": {
-        "id": 1,
-        "name": "Coteado 150g",
-        "grammage": 150,
+        "id": "1",
+        "name": "Obra",
+        "grammage": 80,
         "isSpecialMaterial": false,
         "factorySizes": [
-          { "width": 720, "length": 1020, "usdPerTon": 1400 },
-          { "width": 700, "length": 1000, "usdPerTon": 1400 },
-          { "width": 660, "length": 960, "usdPerTon": 1400 }
+          {
+            "width": 720,
+            "length": 920,
+            "usdPerTon": 1430
+          },
+          {
+            "width": 820,
+            "length": 1180,
+            "usdPerTon": 1430
+          },
+          {
+            "width": 720,
+            "length": 1020,
+            "usdPerTon": 1430
+          },
+          {
+            "width": 210,
+            "length": 297,
+            "usdPerTon": 1430
+          },
+          {
+            "width": 297,
+            "length": 420,
+            "usdPerTon": 1430
+          },
+          {
+            "width": 640,
+            "length": 880,
+            "usdPerTon": 1430
+          }
         ]
       },
       "frontInks": 4,
-      "backInks": 4,
-      "isDuplex": true,
-      "samePlatesForBack": true
-    },
-    {
-      "id": "sticker-7x7",
-      "width": 70,
-      "length": 70,
-      "quantity": 20000,
-      "rotatable": false,
-      "material": {
-        "id": 1,
-        "name": "Coteado 150g",
-        "grammage": 150,
-        "isSpecialMaterial": false,
-        "factorySizes": [
-          { "width": 720, "length": 1020, "usdPerTon": 1400 },
-          { "width": 700, "length": 1000, "usdPerTon": 1400 },
-          { "width": 660, "length": 960, "usdPerTon": 1400 }
-        ]
-      },
-      "frontInks": 1,
       "backInks": 0,
       "isDuplex": false,
       "samePlatesForBack": false
@@ -81,33 +113,1112 @@
   ],
   "machines": [
     {
-      "id": "eb225886-e5dd-46a6-a30b-4e66d39c4cc4",
-      "name": "Heidelberg SM52 4c 2",
+      "id": "89e45759-e95c-4e30-a5e6-96decc5d40cb",
+      "name": "Heidelberg SX74 5c 2",
+      "is_offset": true,
       "printingBodies": 4,
-      "maxSheetSize": { "width": 360, "length": 520 },
-      "overage": { "amount": 50, "perInk": true },
+      "sheetFeedOrientation": "long_edge",
+      "margins": {
+        "tail": 10,
+        "clamp": 10,
+        "sides": 6
+      },
+      "minSheetSize": {
+        "width": 150,
+        "length": 180
+      },
+      "maxSheetSize": {
+        "width": 530,
+        "length": 740
+      },
+      "overage": {
+        "amount": 50,
+        "perInk": true
+      },
       "minImpressionsCharge": 1000,
-      "setupCost": { "price": 700, "perInk": true },
-      "washCost": { "price": 0, "perInk": false },
-      "impressionCost": { "pricePerThousand": 180, "perInkPass": false }
+      "setupCost": {
+        "price": 4800,
+        "perInk": false
+      },
+      "washCost": {
+        "price": 400,
+        "perInk": false
+      },
+      "impressionCost": {
+        "perInkPass": false,
+        "pricePerThousand": 800
+      },
+      "duplexChargePrice": 502,
+      "price_brackets": [
+        {
+          "name": "74x52",
+          "sheetCost": {
+            "unit": "per_thousand",
+            "value": 5200,
+            "currency": "UYU"
+          },
+          "constraints": {
+            "maxLen": 740,
+            "maxWid": 520
+          }
+        }
+      ],
+      "created_at": "2025-09-19T11:47:28.0943+00:00"
     },
     {
-      "id": "e7608615-e0da-4212-a47d-9b83317e09dd",
-      "name": "Heidelberg SX74 5c 2",
-      "printingBodies": 5,
-      "maxSheetSize": { "width": 530, "length": 740 },
-      "overage": { "amount": 150, "perInk": false },
+      "id": "0970d220-0845-470f-8077-fa601bbfb8f4",
+      "name": "Digital Color (Grupo) 2",
+      "is_offset": false,
+      "printingBodies": 4,
+      "sheetFeedOrientation": "short_edge",
+      "margins": {
+        "tail": 6,
+        "clamp": 6,
+        "sides": 3
+      },
+      "minSheetSize": {
+        "width": 100,
+        "length": 100
+      },
+      "maxSheetSize": {
+        "width": 700,
+        "length": 330
+      },
+      "overage": {
+        "amount": 5,
+        "perInk": false
+      },
+      "minImpressionsCharge": 5,
+      "setupCost": {
+        "price": 100,
+        "perInk": false
+      },
+      "washCost": {
+        "price": 0.01,
+        "perInk": false
+      },
+      "impressionCost": {
+        "perInkPass": false,
+        "pricePerThousand": 2800
+      },
+      "duplexChargePrice": 0.01,
+      "price_brackets": [
+        {
+          "name": "33x36",
+          "notes": "Formato corto económico",
+          "sheetCost": {
+            "unit": "per_sheet",
+            "value": 5.2,
+            "currency": "UYU"
+          },
+          "constraints": {
+            "maxLen": 330,
+            "maxWid": 360
+          }
+        },
+        {
+          "name": "33x48.7",
+          "notes": "Formato estándar",
+          "sheetCost": {
+            "unit": "per_sheet",
+            "value": 6.8,
+            "currency": "UYU"
+          },
+          "constraints": {
+            "maxLen": 330,
+            "maxWid": 487
+          }
+        },
+        {
+          "name": "33x70",
+          "notes": "Largo máximo",
+          "sheetCost": {
+            "unit": "per_sheet",
+            "value": 9.4,
+            "currency": "UYU"
+          },
+          "constraints": {
+            "maxLen": 330,
+            "maxWid": 700
+          }
+        }
+      ],
+      "created_at": "2025-09-19T11:47:28.0943+00:00"
+    },
+    {
+      "id": "fb195707-8e47-4538-9c22-1d7831e47499",
+      "name": "Digital B&N (Grupo) 2",
+      "is_offset": false,
+      "printingBodies": 1,
+      "sheetFeedOrientation": "short_edge",
+      "margins": {
+        "tail": 6,
+        "clamp": 6,
+        "sides": 3
+      },
+      "minSheetSize": {
+        "width": 100,
+        "length": 100
+      },
+      "maxSheetSize": {
+        "width": 487,
+        "length": 330
+      },
+      "overage": {
+        "amount": 10,
+        "perInk": false
+      },
+      "minImpressionsCharge": 10,
+      "setupCost": {
+        "price": 100,
+        "perInk": false
+      },
+      "washCost": {
+        "price": 0.001,
+        "perInk": false
+      },
+      "impressionCost": {
+        "perInkPass": false,
+        "pricePerThousand": 200
+      },
+      "duplexChargePrice": null,
+      "price_brackets": [
+        {
+          "name": "A3 (29.7x42)",
+          "sheetCost": {
+            "unit": "per_sheet",
+            "value": 2.8,
+            "currency": "UYU"
+          },
+          "constraints": {
+            "maxLen": 297,
+            "maxWid": 420
+          }
+        },
+        {
+          "name": "SRA3 (32x45)",
+          "sheetCost": {
+            "unit": "per_sheet",
+            "value": 3.6,
+            "currency": "UYU"
+          },
+          "constraints": {
+            "maxLen": 320,
+            "maxWid": 450
+          }
+        }
+      ],
+      "created_at": "2025-09-19T11:47:28.0943+00:00"
+    },
+    {
+      "id": "147abdf2-a561-415f-be8d-1d203a43cf48",
+      "name": "Heidelberg SM52 4c 2",
+      "is_offset": true,
+      "printingBodies": 4,
+      "sheetFeedOrientation": "long_edge",
+      "margins": {
+        "tail": 8,
+        "clamp": 8,
+        "sides": 5
+      },
+      "minSheetSize": {
+        "width": 100,
+        "length": 140
+      },
+      "maxSheetSize": {
+        "width": 360,
+        "length": 520
+      },
+      "overage": {
+        "amount": 50,
+        "perInk": true
+      },
       "minImpressionsCharge": 1000,
-      "setupCost": { "price": 800, "perInk": true },
-      "washCost": { "price": 100, "perInk": true },
-      "impressionCost": { "pricePerThousand": 260, "perInkPass": false }
+      "setupCost": {
+        "price": 1400,
+        "perInk": false
+      },
+      "washCost": {
+        "price": 300,
+        "perInk": false
+      },
+      "impressionCost": {
+        "perInkPass": false,
+        "pricePerThousand": 500
+      },
+      "duplexChargePrice": 500,
+      "price_brackets": [],
+      "created_at": "2025-09-19T11:47:28.0943+00:00"
     }
   ],
   "availableCuts": [
-   { "forPaperSize": { "length": 720, "width": 1020 }, "sheetSizes": [ { "length": 720, "width": 1020 }, { "length": 510, "width": 720 }, { "length": 340, "width": 720 }, { "length": 330, "width": 700 }, { "length": 360, "width": 660 }, { "length": 360, "width": 510 }, { "length": 330, "width": 487 }, { "length": 320, "width": 460 }, { "length": 255, "width": 720 }, { "length": 310, "width": 410 }, { "length": 300, "width": 420 }, { "length": 290, "width": 430 }, { "length": 280, "width": 440 }, { "length": 270, "width": 450 }, { "length": 330, "width": 390 }, { "length": 240, "width": 510 }, { "length": 340, "width": 360 }, { "length": 330, "width": 360 }, { "length": 255, "width": 465 }, { "length": 220, "width": 400 }, { "length": 200, "width": 510 }, { "length": 255, "width": 360 }, { "length": 250, "width": 350 }, { "length": 180, "width": 510 }, { "length": 240, "width": 340 }, { "length": 230, "width": 330 }, { "length": 230, "width": 320 }, { "length": 220, "width": 290 }, { "length": 204, "width": 350 }, { "length": 144, "width": 510 }, { "length": 240, "width": 255 }, { "length": 180, "width": 340 }, { "length": 144, "width": 340 }, { "length": 180, "width": 255 }, { "length": 170, "width": 240 }, { "length": 180, "width": 204 }, { "length": 145, "width": 240 }, { "length": 144, "width": 204 }, { "length": 127, "width": 180 } ] },
-    { "forPaperSize": { "length": 660, "width": 960 }, "sheetSizes": [ { "length": 660, "width": 960 }, { "length": 480, "width": 660 }, { "length": 320, "width": 660 }, { "length": 330, "width": 480 }, { "length": 320, "width": 340 }, { "length": 320, "width": 330 }, { "length": 220, "width": 480 }, { "length": 240, "width": 420 }, { "length": 220, "width": 370 }, { "length": 240, "width": 330 }, { "length": 230, "width": 320 }, { "length": 220, "width": 320 }, { "length": 220, "width": 260 }, { "length": 182, "width": 330 }, { "length": 210, "width": 250 }, { "length": 220, "width": 240 }, { "length": 160, "width": 330 }, { "length": 192, "width": 234 }, { "length": 192, "width": 220 }, { "length": 165, "width": 240 }, { "length": 160, "width": 220 }, { "length": 130, "width": 220 }, { "length": 165, "width": 192 }, { "length": 125, "width": 210 }, { "length": 120, "width": 220 }, { "length": 160, "width": 165 }, { "length": 132, "width": 192 }, { "length": 110, "width": 192 }, { "length": 120, "width": 165 } ] },
-    { "forPaperSize": { "length": 700, "width": 1000 }, "sheetSizes": [ { "length": 1000, "width": 700 }, { "length": 500, "width": 700 }, { "length": 330, "width": 700 }, { "length": 350, "width": 650 }, { "length": 350, "width": 500 }, { "length": 330, "width": 487 }, { "length": 320, "width": 460 }, { "length": 250, "width": 700 }, { "length": 300, "width": 400 }, { "length": 280, "width": 420 }, { "length": 270, "width": 430 }, { "length": 310, "width": 390 }, { "length": 230, "width": 500 }, { "length": 330, "width": 350 }, { "length": 250, "width": 450 }, { "length": 200, "width": 400 }, { "length": 250, "width": 350 }, { "length": 175, "width": 500 }, { "length": 230, "width": 333 }, { "length": 230, "width": 320 }, { "length": 220, "width": 280 }, { "length": 200, "width": 350 }, { "length": 140, "width": 500 }, { "length": 233, "width": 250 }, { "length": 140, "width": 333 }, { "length": 175, "width": 330 }, { "length": 175, "width": 250 }, { "length": 166, "width": 233 }, { "length": 175, "width": 200 }, { "length": 140, "width": 220 }, { "length": 140, "width": 200 }, { "length": 125, "width": 175 } ] },
-    { "forPaperSize": { "length": 720, "width": 920 }, "sheetSizes": [ { "length": 920, "width": 720 }, { "length": 460, "width": 720 }, { "length": 305, "width": 720 }, { "length": 360, "width": 460 } ] },
-    { "forPaperSize": { "length": 820, "width": 1180 }, "sheetSizes": [ { "length": 1180, "width": 820 }, { "length": 590, "width": 820 }, { "length": 390, "width": 820 }, { "length": 410, "width": 590 } ] }
+    {
+      "forPaperSize": {
+        "width": 1020,
+        "length": 720
+      },
+      "sheetSizes": [
+        {
+          "width": 1020,
+          "length": 720
+        },
+        {
+          "width": 720,
+          "length": 510
+        },
+        {
+          "width": 720,
+          "length": 340
+        },
+        {
+          "width": 700,
+          "length": 330
+        },
+        {
+          "width": 660,
+          "length": 360
+        },
+        {
+          "width": 510,
+          "length": 360
+        },
+        {
+          "width": 487,
+          "length": 330
+        },
+        {
+          "width": 460,
+          "length": 320
+        },
+        {
+          "width": 720,
+          "length": 255
+        },
+        {
+          "width": 410,
+          "length": 310
+        },
+        {
+          "width": 420,
+          "length": 300
+        },
+        {
+          "width": 430,
+          "length": 290
+        },
+        {
+          "width": 440,
+          "length": 280
+        },
+        {
+          "width": 450,
+          "length": 270
+        },
+        {
+          "width": 390,
+          "length": 330
+        },
+        {
+          "width": 510,
+          "length": 240
+        },
+        {
+          "width": 360,
+          "length": 340
+        },
+        {
+          "width": 360,
+          "length": 330
+        },
+        {
+          "width": 465,
+          "length": 255
+        },
+        {
+          "width": 400,
+          "length": 220
+        },
+        {
+          "width": 510,
+          "length": 200
+        },
+        {
+          "width": 360,
+          "length": 255
+        },
+        {
+          "width": 350,
+          "length": 250
+        },
+        {
+          "width": 510,
+          "length": 180
+        },
+        {
+          "width": 340,
+          "length": 240
+        },
+        {
+          "width": 330,
+          "length": 230
+        },
+        {
+          "width": 320,
+          "length": 230
+        },
+        {
+          "width": 290,
+          "length": 220
+        },
+        {
+          "width": 350,
+          "length": 204
+        },
+        {
+          "width": 510,
+          "length": 144
+        },
+        {
+          "width": 255,
+          "length": 240
+        },
+        {
+          "width": 340,
+          "length": 180
+        },
+        {
+          "width": 340,
+          "length": 144
+        },
+        {
+          "width": 255,
+          "length": 180
+        },
+        {
+          "width": 240,
+          "length": 170
+        },
+        {
+          "width": 204,
+          "length": 180
+        },
+        {
+          "width": 240,
+          "length": 145
+        },
+        {
+          "width": 204,
+          "length": 144
+        },
+        {
+          "width": 180,
+          "length": 127
+        }
+      ]
+    },
+    {
+      "forPaperSize": {
+        "width": 960,
+        "length": 660
+      },
+      "sheetSizes": [
+        {
+          "width": 960,
+          "length": 660
+        },
+        {
+          "width": 660,
+          "length": 480
+        },
+        {
+          "width": 660,
+          "length": 320
+        },
+        {
+          "width": 480,
+          "length": 330
+        },
+        {
+          "width": 340,
+          "length": 320
+        },
+        {
+          "width": 330,
+          "length": 320
+        },
+        {
+          "width": 480,
+          "length": 220
+        },
+        {
+          "width": 420,
+          "length": 240
+        },
+        {
+          "width": 370,
+          "length": 220
+        },
+        {
+          "width": 330,
+          "length": 240
+        },
+        {
+          "width": 320,
+          "length": 230
+        },
+        {
+          "width": 320,
+          "length": 220
+        },
+        {
+          "width": 260,
+          "length": 220
+        },
+        {
+          "width": 330,
+          "length": 182
+        },
+        {
+          "width": 250,
+          "length": 210
+        },
+        {
+          "width": 240,
+          "length": 220
+        },
+        {
+          "width": 330,
+          "length": 160
+        },
+        {
+          "width": 234,
+          "length": 192
+        },
+        {
+          "width": 220,
+          "length": 192
+        },
+        {
+          "width": 240,
+          "length": 165
+        },
+        {
+          "width": 220,
+          "length": 160
+        },
+        {
+          "width": 220,
+          "length": 130
+        },
+        {
+          "width": 192,
+          "length": 165
+        },
+        {
+          "width": 210,
+          "length": 125
+        },
+        {
+          "width": 220,
+          "length": 120
+        },
+        {
+          "width": 165,
+          "length": 160
+        },
+        {
+          "width": 192,
+          "length": 132
+        },
+        {
+          "width": 192,
+          "length": 110
+        },
+        {
+          "width": 165,
+          "length": 120
+        }
+      ]
+    },
+    {
+      "forPaperSize": {
+        "width": 1000,
+        "length": 700
+      },
+      "sheetSizes": [
+        {
+          "width": 700,
+          "length": 1000
+        },
+        {
+          "width": 700,
+          "length": 500
+        },
+        {
+          "width": 700,
+          "length": 330
+        },
+        {
+          "width": 650,
+          "length": 350
+        },
+        {
+          "width": 500,
+          "length": 350
+        },
+        {
+          "width": 487,
+          "length": 330
+        },
+        {
+          "width": 460,
+          "length": 320
+        },
+        {
+          "width": 700,
+          "length": 250
+        },
+        {
+          "width": 400,
+          "length": 300
+        },
+        {
+          "width": 420,
+          "length": 280
+        },
+        {
+          "width": 430,
+          "length": 270
+        },
+        {
+          "width": 390,
+          "length": 310
+        },
+        {
+          "width": 500,
+          "length": 230
+        },
+        {
+          "width": 350,
+          "length": 330
+        },
+        {
+          "width": 450,
+          "length": 250
+        },
+        {
+          "width": 400,
+          "length": 200
+        },
+        {
+          "width": 350,
+          "length": 250
+        },
+        {
+          "width": 500,
+          "length": 175
+        },
+        {
+          "width": 333,
+          "length": 230
+        },
+        {
+          "width": 320,
+          "length": 230
+        },
+        {
+          "width": 280,
+          "length": 220
+        },
+        {
+          "width": 350,
+          "length": 200
+        },
+        {
+          "width": 500,
+          "length": 140
+        },
+        {
+          "width": 250,
+          "length": 233
+        },
+        {
+          "width": 333,
+          "length": 140
+        },
+        {
+          "width": 330,
+          "length": 175
+        },
+        {
+          "width": 250,
+          "length": 175
+        },
+        {
+          "width": 233,
+          "length": 166
+        },
+        {
+          "width": 200,
+          "length": 175
+        },
+        {
+          "width": 220,
+          "length": 140
+        },
+        {
+          "width": 200,
+          "length": 140
+        },
+        {
+          "width": 175,
+          "length": 125
+        }
+      ]
+    },
+    {
+      "forPaperSize": {
+        "width": 880,
+        "length": 640
+      },
+      "sheetSizes": [
+        {
+          "width": 640,
+          "length": 880
+        },
+        {
+          "width": 640,
+          "length": 440
+        },
+        {
+          "width": 640,
+          "length": 293
+        },
+        {
+          "width": 440,
+          "length": 320
+        },
+        {
+          "width": 357,
+          "length": 293
+        },
+        {
+          "width": 420,
+          "length": 220
+        },
+        {
+          "width": 320,
+          "length": 293
+        },
+        {
+          "width": 440,
+          "length": 213
+        },
+        {
+          "width": 333,
+          "length": 213
+        },
+        {
+          "width": 320,
+          "length": 220
+        },
+        {
+          "width": 293,
+          "length": 213
+        },
+        {
+          "width": 320,
+          "length": 176
+        },
+        {
+          "width": 230,
+          "length": 210
+        },
+        {
+          "width": 221,
+          "length": 213
+        },
+        {
+          "width": 220,
+          "length": 213
+        },
+        {
+          "width": 320,
+          "length": 146
+        },
+        {
+          "width": 220,
+          "length": 176
+        },
+        {
+          "width": 213,
+          "length": 176
+        },
+        {
+          "width": 220,
+          "length": 160
+        },
+        {
+          "width": 213,
+          "length": 146
+        },
+        {
+          "width": 176,
+          "length": 160
+        },
+        {
+          "width": 213,
+          "length": 112
+        },
+        {
+          "width": 213,
+          "length": 110
+        },
+        {
+          "width": 160,
+          "length": 146
+        },
+        {
+          "width": 176,
+          "length": 128
+        },
+        {
+          "width": 176,
+          "length": 106
+        },
+        {
+          "width": 160,
+          "length": 110
+        }
+      ]
+    },
+    {
+      "forPaperSize": {
+        "width": 920,
+        "length": 720
+      },
+      "sheetSizes": [
+        {
+          "width": 720,
+          "length": 920
+        },
+        {
+          "width": 720,
+          "length": 460
+        },
+        {
+          "width": 720,
+          "length": 305
+        },
+        {
+          "width": 700,
+          "length": 305
+        },
+        {
+          "width": 590,
+          "length": 330
+        },
+        {
+          "width": 460,
+          "length": 360
+        },
+        {
+          "width": 460,
+          "length": 330
+        },
+        {
+          "width": 460,
+          "length": 320
+        },
+        {
+          "width": 720,
+          "length": 230
+        },
+        {
+          "width": 410,
+          "length": 305
+        },
+        {
+          "width": 420,
+          "length": 295
+        },
+        {
+          "width": 430,
+          "length": 285
+        },
+        {
+          "width": 440,
+          "length": 275
+        },
+        {
+          "width": 450,
+          "length": 265
+        },
+        {
+          "width": 460,
+          "length": 240
+        },
+        {
+          "width": 360,
+          "length": 305
+        },
+        {
+          "width": 360,
+          "length": 230
+        },
+        {
+          "width": 350,
+          "length": 230
+        },
+        {
+          "width": 460,
+          "length": 180
+        },
+        {
+          "width": 320,
+          "length": 230
+        },
+        {
+          "width": 305,
+          "length": 240
+        },
+        {
+          "width": 305,
+          "length": 230
+        },
+        {
+          "width": 410,
+          "length": 155
+        },
+        {
+          "width": 400,
+          "length": 160
+        },
+        {
+          "width": 380,
+          "length": 170
+        },
+        {
+          "width": 370,
+          "length": 180
+        },
+        {
+          "width": 410,
+          "length": 153
+        },
+        {
+          "width": 420,
+          "length": 150
+        },
+        {
+          "width": 306,
+          "length": 205
+        },
+        {
+          "width": 300,
+          "length": 210
+        },
+        {
+          "width": 290,
+          "length": 215
+        },
+        {
+          "width": 280,
+          "length": 220
+        },
+        {
+          "width": 260,
+          "length": 230
+        },
+        {
+          "width": 360,
+          "length": 184
+        },
+        {
+          "width": 460,
+          "length": 144
+        },
+        {
+          "width": 240,
+          "length": 230
+        },
+        {
+          "width": 306,
+          "length": 180
+        },
+        {
+          "width": 306,
+          "length": 144
+        },
+        {
+          "width": 230,
+          "length": 180
+        },
+        {
+          "width": 240,
+          "length": 153
+        },
+        {
+          "width": 184,
+          "length": 180
+        },
+        {
+          "width": 240,
+          "length": 131
+        },
+        {
+          "width": 184,
+          "length": 144
+        },
+        {
+          "width": 180,
+          "length": 115
+        }
+      ]
+    },
+    {
+      "forPaperSize": {
+        "width": 1180,
+        "length": 820
+      },
+      "sheetSizes": [
+        {
+          "width": 820,
+          "length": 1180
+        },
+        {
+          "width": 820,
+          "length": 590
+        },
+        {
+          "width": 820,
+          "length": 390
+        },
+        {
+          "width": 770,
+          "length": 410
+        },
+        {
+          "width": 780,
+          "length": 400
+        },
+        {
+          "width": 590,
+          "length": 410
+        },
+        {
+          "width": 820,
+          "length": 295
+        },
+        {
+          "width": 720,
+          "length": 295
+        },
+        {
+          "width": 430,
+          "length": 390
+        },
+        {
+          "width": 440,
+          "length": 380
+        },
+        {
+          "width": 450,
+          "length": 370
+        },
+        {
+          "width": 460,
+          "length": 360
+        },
+        {
+          "width": 470,
+          "length": 350
+        },
+        {
+          "width": 480,
+          "length": 340
+        },
+        {
+          "width": 490,
+          "length": 330
+        },
+        {
+          "width": 500,
+          "length": 320
+        },
+        {
+          "width": 510,
+          "length": 310
+        },
+        {
+          "width": 520,
+          "length": 300
+        },
+        {
+          "width": 590,
+          "length": 270
+        },
+        {
+          "width": 525,
+          "length": 295
+        },
+        {
+          "width": 520,
+          "length": 295
+        },
+        {
+          "width": 535,
+          "length": 285
+        },
+        {
+          "width": 545,
+          "length": 275
+        },
+        {
+          "width": 455,
+          "length": 270
+        },
+        {
+          "width": 460,
+          "length": 260
+        },
+        {
+          "width": 465,
+          "length": 250
+        },
+        {
+          "width": 470,
+          "length": 240
+        },
+        {
+          "width": 475,
+          "length": 230
+        },
+        {
+          "width": 480,
+          "length": 220
+        },
+        {
+          "width": 485,
+          "length": 210
+        },
+        {
+          "width": 590,
+          "length": 205
+        },
+        {
+          "width": 390,
+          "length": 270
+        },
+        {
+          "width": 410,
+          "length": 235
+        },
+        {
+          "width": 410,
+          "length": 195
+        }
+      ]
+    }
   ]
 }
