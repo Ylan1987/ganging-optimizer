@@ -93,10 +93,11 @@ class AvailableCutMap:
 @dataclass
 class InputData:
     options: Options
-    dollarRate: float
+    commonDetails: Dict[str, float]
     jobs: List[Job]
     machines: List[Machine]
     availableCuts: List[AvailableCutMap]
+    dollarRate: float
 # endregion
 
 # region CALLBACK PARA MÚLTIPLES SOLUCIONES
