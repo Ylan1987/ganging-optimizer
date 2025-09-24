@@ -1,10 +1,9 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_file
 import json
 import io
 from .optimizer import main as run_optimizer #otro comentario nuevo
 from . import imposition_service 
 from flask_cors import CORS
-
 
 app = Flask(__name__)
 
@@ -15,6 +14,35 @@ origins = [
 ]
 
 CORS(app, origins=origins)
+
+@app.route('/api/validate-and-preview-pdf', methods=['POST'])
+def validate_and_preview_endpoint():
+    if 'file' not in request.files:
+        return jsonify({"error": "No se recibió ningún archivo."}), 400
+    if 'expected_width' not in request.form or 'expected_height' not in request.form:
+        return jsonify({"error": "Faltan las dimensiones esperadas."}), 400
+
+    file = request.files['file']
+    pdf_content = file.read()
+    
+    try:
+        expected_width = float(request.form['expected_width'])
+        expected_height = float(request.form['expected_height'])
+    except ValueError:
+        return jsonify({"error": "Las dimensiones deben ser números."}), 400
+    
+    result = imposition_service.validate_and_preview_pdf(
+        pdf_content=pdf_content,
+        expected_width=expected_width,
+        expected_height=expected_height
+    )
+    
+    if not result['isValid']:
+        return jsonify({"error": "PDF inválido", "details": result['errorMessage']}), 400
+        
+    return jsonify(result), 200
+
+
 
 @app.route('/api/optimize', methods=['POST'])
 def optimize_endpoint():
