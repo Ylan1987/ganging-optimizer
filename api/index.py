@@ -1,7 +1,10 @@
 from flask import Flask, request, jsonify
 import json
+import io
 from .optimizer import main as run_optimizer #otro comentario nuevo
+from . import imposition_service 
 from flask_cors import CORS
+
 
 app = Flask(__name__)
 
@@ -43,3 +46,42 @@ def optimize_endpoint():
 
 # Es importante modificar tu optimizer.py para que escriba en /tmp/output.json
 # y no en el directorio local, ya que Vercel solo permite escribir en /tmp.
+
+@app.route('/api/generate-imposition', methods=['POST'])
+def generate_imposition_endpoint():
+    try:
+        # 1. Recibir los datos del formulario (multipart/form-data)
+        # El JSON con el plan de armado viene como un string en un campo de texto
+        if 'layout_data' not in request.form:
+            return jsonify({"error": "Falta el campo 'layout_data' con el plan de armado."}), 400
+        
+        layout_data_str = request.form['layout_data']
+        layout = json.loads(layout_data_str)
+
+        # Los archivos vienen en un diccionario especial
+        files = request.files.getlist('files')
+        if not files:
+            return jsonify({"error": "No se recibieron archivos PDF."}), 400
+
+        # Mapeamos los archivos por su nombre para un acceso fácil
+        job_files = {file.filename: file.read() for file in files}
+
+        # 2. Llamar a nuestro servicio de imposición
+        pdf_bytes = imposition_service.validate_and_create_imposition(
+            sheet_config=layout['sheet_config'],
+            jobs=layout['jobs'],
+            job_files=job_files
+        )
+
+        # 3. Devolver el PDF generado
+        return send_file(
+            io.BytesIO(pdf_bytes),
+            mimetype='application/pdf',
+            as_attachment=True,
+            download_name='pliego_impuesto.pdf'
+        )
+
+    except ValueError as e: # Errores de validación controlados
+        return jsonify({"error": "Error de validación.", "details": str(e)}), 400
+    except Exception as e: # Errores inesperados
+        return jsonify({"error": "Ocurrió un error en el servidor.", "details": str(e)}), 500
