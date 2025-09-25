@@ -13,7 +13,12 @@ origins = [
     "http://localhost:5173" # Generalmente usado por Svelte/Vite
 ]
 
-CORS(app, origins=origins)
+CORS(app, 
+    origins=origins, 
+    methods=["GET", "POST", "OPTIONS"], 
+    allow_headers=["Content-Type", "x-vercel-protection-bypass"], 
+    supports_credentials=True
+)
 
 @app.route('/api/validate-and-preview-pdf', methods=['POST'])
 def validate_and_preview_endpoint():

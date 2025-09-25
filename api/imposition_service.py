@@ -2,17 +2,9 @@
 import fitz  # PyMuPDF
 from typing import List, Dict, Any
 import base64
-from flask_cors import CORS
 
-origins = [
-    "https://optimizador-ganging-ui.vercel.app",
-    "http://localhost:3000",
-    "http://localhost:5173" # Generalmente usado por Svelte/Vite
-]
 
-CORS(app, origins=origins)
 # (La función validate_and_create_imposition que ya tenías se mantiene igual)
-
 def validate_and_preview_pdf(pdf_content: bytes, expected_width: float, expected_height: float) -> Dict:
     """
     Valida las dimensiones del TrimBox de un PDF y genera una imagen de previsualización.
