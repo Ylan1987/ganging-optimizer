@@ -14,13 +14,15 @@ origins = [
 ]
 
 CORS(app, 
-    origins=origins, 
-    methods=["GET", "POST", "OPTIONS"], 
-    allow_headers=["Content-Type", "x-vercel-protection-bypass"], 
-    supports_credentials=True
+    resources={r"/api/*": {
+        "origins": origins,
+        "methods": ["GET", "POST", "OPTIONS"],
+        "allow_headers": ["Content-Type", "x-vercel-protection-bypass"],
+        "supports_credentials": True
+    }}
 )
 
-@app.route('/api/validate-and-preview-pdf', methods=['POST'])
+@app.route('/api/validate-and-preview-pdf', methods=['POST', 'OPTIONS'])
 def validate_and_preview_endpoint():
     if 'file' not in request.files:
         return jsonify({"error": "No se recibió ningún archivo."}), 400
@@ -51,7 +53,7 @@ def validate_and_preview_endpoint():
 
 
 
-@app.route('/api/optimize', methods=['POST'])
+@app.route('/api/optimize', methods=['POST', 'OPTIONS'])
 def optimize_endpoint():
     try:
         # 1. Recibir el input.json del cuerpo de la petición
@@ -82,7 +84,7 @@ def optimize_endpoint():
 # Es importante modificar tu optimizer.py para que escriba en /tmp/output.json
 # y no en el directorio local, ya que Vercel solo permite escribir en /tmp.
 
-@app.route('/api/generate-imposition', methods=['POST'])
+@app.route('/api/generate-imposition', methods=['POST', 'OPTIONS'])
 def generate_imposition_endpoint():
     try:
         # 1. Recibir los datos del formulario (multipart/form-data)
