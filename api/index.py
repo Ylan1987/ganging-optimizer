@@ -3,22 +3,9 @@ import json
 import io
 from .optimizer import main as run_optimizer #otro comentario nuevo
 from . import imposition_service 
-from flask_cors import CORS
 
 app = Flask(__name__)
 
-origins = [
-    "https://optimizador-ganging-ui.vercel.app",
-    "http://localhost:3000",
-    "http://localhost:5173" # Generalmente usado por Svelte/Vite
-]
-
-CORS(app, 
-     origins=origins, 
-     methods=, 
-     allow_headers=, 
-     supports_credentials=True
-)
 
 @app.route('/api/validate-and-preview-pdf', methods=['POST', 'OPTIONS'])
 def validate_and_preview_endpoint():
