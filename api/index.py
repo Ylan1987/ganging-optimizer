@@ -31,14 +31,16 @@ def validate_and_preview_endpoint():
     except ValueError:
         return jsonify({"error": "Las dimensiones deben ser números."}), 400
     
+    # Llama a la función del servicio que procesa el PDF
     result = imposition_service.validate_and_preview_pdf(
         pdf_content=pdf_content,
         expected_width=expected_width,
         expected_height=expected_height
     )
     
-    if not result['isValid']:
-        return jsonify({"error": "PDF inválido", "details": result['errorMessage']}), 400
+    if not result.get('isValid'):
+        # Devuelve un error 400 (Bad Request) si la validación falla
+        return jsonify({"error": "PDF inválido", "details": result.get('errorMessage', 'Error desconocido')}), 400
         
     return jsonify(result), 200
 
