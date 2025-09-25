@@ -14,18 +14,15 @@ def validate_and_preview_pdf(pdf_content: bytes, expected_width: float, expected
             
             page = doc[0]
             
-            # 1. Obtener el TrimBox
             trimbox = page.trimbox
             if not trimbox:
                 raise ValueError("El PDF no contiene un TrimBox definido.")
 
             pdf_width_pt = trimbox.width
             pdf_height_pt = trimbox.height
-
             pdf_width_mm = pdf_width_pt * (25.4 / 72)
             pdf_height_mm = pdf_height_pt * (25.4 / 72)
 
-            # 2. La lógica de validación y rotación se mantiene igual
             width_match = abs(pdf_width_mm - expected_width) < 1
             height_match = abs(pdf_height_mm - expected_height) < 1
             rotated_width_match = abs(pdf_width_mm - expected_height) < 1
@@ -41,20 +38,22 @@ def validate_and_preview_pdf(pdf_content: bytes, expected_width: float, expected
             if pdf_is_landscape != placement_is_landscape:
                 rotation = 90
             
-            # --- INICIO DE LA CORRECCIÓN ---
-
-            # 3. Forzamos el área de recorte de la página al TrimBox.
-            #    Este es el método robusto que reemplaza al `clip`.
             page.set_cropbox(trimbox)
             
-            # 4. Generamos la imagen. La matriz de transformación y zoom se mantiene.
-            zoom = 150 / 72 
-            mat = fitz.Matrix(zoom, zoom).prerotate(rotation)
+            # --- INICIO DE LA CORRECCIÓN ---
+
+            # Método anterior:
+            # zoom = 150 / 72 
+            # mat = fitz.Matrix(zoom, zoom).prerotate(rotation)
+            # pix = page.get_pixmap(matrix=mat)
+
+            # Método nuevo y optimizado:
+            # Generamos la imagen directamente a 72 DPI, ideal para previews rápidas.
+            # La matriz ahora solo se encarga de la rotación, no del zoom.
+            mat = fitz.Matrix().prerotate(rotation)
+            pix = page.get_pixmap(dpi=72, matrix=mat)
             
-            # Ya no se necesita el parámetro 'clip=trimbox' porque la página misma ya está recortada.
-            pix = page.get_pixmap(matrix=mat)
-            
-            # --- FIN DE LA CORRERECCIÓN ---
+            # --- FIN DE LA CORRECCIÓN ---
             
             img_bytes = pix.tobytes("png")
             base64_img = base64.b64encode(img_bytes).decode('utf-8')
@@ -73,7 +72,6 @@ def validate_and_create_imposition(sheet_config: Dict, jobs: List[Dict], job_fil
     Valida las dimensiones de los PDFs subidos y crea el pliego impuesto.
     (Esta función no necesita cambios y se mantiene igual)
     """
-    # 1. Validación de Dimensiones
     for job in jobs:
         job_name = job['job_name']
         expected_dims = job['trim_box']
@@ -93,14 +91,12 @@ def validate_and_create_imposition(sheet_config: Dict, jobs: List[Dict], job_fil
             if not (abs(width_mm - expected_dims['width']) < 1 and abs(height_mm - expected_dims['height']) < 1):
                 raise ValueError(f"Las dimensiones del PDF para '{job_name}' ({width_mm}x{height_mm}mm) no coinciden con las guardadas ({expected_dims['width']}x{expected_dims['height']}mm).")
 
-    # 2. Creación del Pliego
     sheet_width_pt = sheet_config['width'] * (72 / 25.4)
     sheet_height_pt = sheet_config['height'] * (72 / 25.4)
     
     final_doc = fitz.open()
     final_page = final_doc.new_page(width=sheet_width_pt, height=sheet_height_pt)
 
-    # 3. Estampado de los trabajos
     for job in jobs:
         job_name = job['job_name']
         pdf_content = job_files[job_name]
