@@ -14,12 +14,10 @@ origins = [
 ]
 
 CORS(app, 
-    resources={r"/api/*": {
-        "origins": origins,
-        "methods": ["GET", "POST", "OPTIONS"],
-        "allow_headers": ["Content-Type", "x-vercel-protection-bypass"],
-        "supports_credentials": True
-    }}
+     origins=origins, 
+     methods=, 
+     allow_headers=, 
+     supports_credentials=True
 )
 
 @app.route('/api/validate-and-preview-pdf', methods=['POST', 'OPTIONS'])
