@@ -2,6 +2,7 @@
 import fitz  # PyMuPDF
 from typing import List, Dict, Any
 import base64
+import traceback # <--- AÑADE ESTA LÍNEA AL PRINCIPIO
 
 def validate_and_preview_pdf(pdf_content: bytes, expected_width: float, expected_height: float) -> Dict:
     """
@@ -50,7 +51,11 @@ def validate_and_preview_pdf(pdf_content: bytes, expected_width: float, expected
             }
 
     except Exception as e:
+        # Este bloque ahora imprimirá el error completo en los logs de Vercel
+        tb_str = traceback.format_exc()
+        print(f"--- ERROR DETALLADO EN validate_and_preview_pdf ---\n{tb_str}\n--------------------")
         return {"isValid": False, "errorMessage": f"Error al procesar el PDF: {str(e)}"}
+    # --- FIN DEL CAMBIO ---
 
 
 def validate_and_create_imposition(sheet_config: Dict, jobs: List[Dict], job_files: Dict) -> bytes:
