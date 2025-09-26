@@ -4,7 +4,7 @@ from typing import List, Dict, Any
 import base64
 import traceback
 
-def validate_and_preview_pdf(pdf_content: bytes, expected_width: float, expected_height: float) -> Dict:
+def validate_and_preview_pdf(pdf_content: bytes, expected_width: float, expected_height: float, bleed_mm: float) -> Dict:
     """
     Valida las dimensiones del TrimBox de un PDF y genera una imagen de previsualización.
     """
@@ -37,22 +37,17 @@ def validate_and_preview_pdf(pdf_content: bytes, expected_width: float, expected
             if not ((width_match and height_match) or (rotated_width_match and rotated_height_match)):
                 error_msg = f"Las dimensiones del TrimBox ({pdf_width_mm:.1f}x{pdf_height_mm:.1f}mm) no coinciden con las esperadas ({expected_trim_width:.1f}x{expected_trim_height:.1f}mm)."
                 return {"isValid": False, "errorMessage": error_msg}
-                
-            # 1. Decidimos el ángulo de rotación necesario (0 o 90 grados)
+            
+            # La lógica de rotación ahora usa las dimensiones CON sangrado
             is_original_landscape = pdf_width_mm > pdf_height_mm
             is_placement_landscape = expected_width > expected_height
             rotation_angle = 0
             if is_original_landscape != is_placement_landscape:
                 rotation_angle = 90
             
-            # 2. Creamos una matriz de transformación que SOLO contiene la rotación.
             mat = fitz.Matrix().prerotate(rotation_angle)
             
-            # 3. Generamos la imagen en un solo paso, pasándole el recorte (clip)
-            #    y la matriz de rotación. Este es el método más robusto y compatible.
             pix = page.get_pixmap(dpi=72, clip=trimbox, matrix=mat)
-            
-            # --- FIN DE LA CORRECCIÓN ---
             
             img_bytes = pix.tobytes("png")
             base64_img = base64.b64encode(img_bytes).decode('utf-8')
@@ -66,7 +61,6 @@ def validate_and_preview_pdf(pdf_content: bytes, expected_width: float, expected
         tb_str = traceback.format_exc()
         print(f"--- ERROR DETALLADO EN validate_and_preview_pdf ---\n{tb_str}\n--------------------")
         return {"isValid": False, "errorMessage": f"Error al procesar el PDF: {str(e)}"}
-
 
 def validate_and_create_imposition(sheet_config: Dict, jobs: List, job_files: Dict) -> bytes:
     """
