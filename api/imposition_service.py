@@ -24,19 +24,22 @@ def validate_and_preview_pdf(pdf_content: bytes, expected_width: float, expected
             pdf_width_mm = pdf_width_pt * (25.4 / 72)
             pdf_height_mm = pdf_height_pt * (25.4 / 72)
 
-            width_match = abs(pdf_width_mm - expected_width) < 1
-            height_match = abs(pdf_height_mm - expected_height) < 1
-            rotated_width_match = abs(pdf_width_mm - expected_height) < 1
-            rotated_height_match = abs(pdf_height_mm - expected_width) < 1
+            # Calculamos las dimensiones esperadas del TrimBox restando el sangrado
+            expected_trim_width = expected_width - (2 * bleed_mm)
+            expected_trim_height = expected_height - (2 * bleed_mm)
+
+            # Comparamos el TrimBox del PDF con el TrimBox esperado
+            width_match = abs(pdf_width_mm - expected_trim_width) < 1
+            height_match = abs(pdf_height_mm - expected_trim_height) < 1
+            rotated_width_match = abs(pdf_width_mm - expected_trim_height) < 1
+            rotated_height_match = abs(pdf_height_mm - expected_trim_width) < 1
 
             if not ((width_match and height_match) or (rotated_width_match and rotated_height_match)):
-                error_msg = f"Las dimensiones del TrimBox ({pdf_width_mm:.1f}x{pdf_height_mm:.1f}mm) no coinciden con las esperadas ({expected_width}x{expected_height}mm)."
+                error_msg = f"Las dimensiones del TrimBox ({pdf_width_mm:.1f}x{pdf_height_mm:.1f}mm) no coinciden con las esperadas ({expected_trim_width:.1f}x{expected_trim_height:.1f}mm)."
                 return {"isValid": False, "errorMessage": error_msg}
-            
-            # --- INICIO DE LA CORRECCIÓN DEFINITIVA ---
-            
+                
             # 1. Decidimos el ángulo de rotación necesario (0 o 90 grados)
-            is_original_landscape = trimbox.width > trimbox.height
+            is_original_landscape = pdf_width_mm > pdf_height_mm
             is_placement_landscape = expected_width > expected_height
             rotation_angle = 0
             if is_original_landscape != is_placement_landscape:

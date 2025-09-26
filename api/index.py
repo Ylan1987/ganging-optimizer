@@ -11,8 +11,8 @@ app = Flask(__name__)
 def validate_and_preview_endpoint():
     if 'file' not in request.files:
         return jsonify({"error": "No se recibió ningún archivo."}), 400
-    if 'expected_width' not in request.form or 'expected_height' not in request.form:
-        return jsonify({"error": "Faltan las dimensiones esperadas."}), 400
+    if 'expected_width' not in request.form or 'expected_height' not in request.form or 'bleed' not in request.form:
+        return jsonify({"error": "Faltan las dimensiones esperadas o el sangrado."}), 400
 
     file = request.files['file']
     pdf_content = file.read()
@@ -20,15 +20,15 @@ def validate_and_preview_endpoint():
     try:
         expected_width = float(request.form['expected_width'])
         expected_height = float(request.form['expected_height'])
+        bleed_mm = float(request.form['bleed']) # <--- AÑADIDO
     except ValueError:
-        return jsonify({"error": "Las dimensiones deben ser números."}), 400
-    
-    # Llama a la función del servicio que procesa el PDF
+        return jsonify({"error": "Las dimensiones o el sangrado deben ser números."}), 400
+
     result = imposition_service.validate_and_preview_pdf(
         pdf_content=pdf_content,
         expected_width=expected_width,
-        expected_height=expected_height
-    )
+        expected_height=expected_height,
+        bleed_mm=bleed_mm # <--- AÑADIDO
     
     if not result.get('isValid'):
         # Devuelve un error 400 (Bad Request) si la validación falla
