@@ -39,7 +39,7 @@ def validate_and_preview_pdf(pdf_content: bytes, expected_width: float, expected
             
             if is_original_landscape != is_placement_landscape:
                 mat = fitz.Matrix(0, 1, -1, 0, pix.height, 0)
-                pix = pix.transformed(mat)
+                pix = pix.transform(mat)
             
             img_bytes = pix.tobytes("png")
             base64_img = base64.b64encode(img_bytes).decode('utf-8')
