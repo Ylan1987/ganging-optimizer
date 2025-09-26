@@ -2,7 +2,7 @@
 import fitz  # PyMuPDF
 from typing import List, Dict, Any
 import base64
-import traceback # <--- AÑADE ESTA LÍNEA AL PRINCIPIO
+import traceback
 
 def validate_and_preview_pdf(pdf_content: bytes, expected_width: float, expected_height: float) -> Dict:
     """
@@ -33,14 +33,23 @@ def validate_and_preview_pdf(pdf_content: bytes, expected_width: float, expected
                 error_msg = f"Las dimensiones del TrimBox ({pdf_width_mm:.1f}x{pdf_height_mm:.1f}mm) no coinciden con las esperadas ({expected_width}x{expected_height}mm)."
                 return {"isValid": False, "errorMessage": error_msg}
             
-            pix = page.get_pixmap(dpi=30, clip=trimbox)
-
+            # --- INICIO DE LA CORRECCIÓN DEFINITIVA ---
+            
+            # 1. Decidimos el ángulo de rotación necesario (0 o 90 grados)
             is_original_landscape = trimbox.width > trimbox.height
             is_placement_landscape = expected_width > expected_height
-            
+            rotation_angle = 0
             if is_original_landscape != is_placement_landscape:
-                mat = fitz.Matrix(0, 1, -1, 0, pix.height, 0)
-                pix = fitz.Pixmap(pix, mat)
+                rotation_angle = 90
+            
+            # 2. Creamos una matriz de transformación que SOLO contiene la rotación.
+            mat = fitz.Matrix().prerotate(rotation_angle)
+            
+            # 3. Generamos la imagen en un solo paso, pasándole el recorte (clip)
+            #    y la matriz de rotación. Este es el método más robusto y compatible.
+            pix = page.get_pixmap(dpi=72, clip=trimbox, matrix=mat)
+            
+            # --- FIN DE LA CORRECCIÓN ---
             
             img_bytes = pix.tobytes("png")
             base64_img = base64.b64encode(img_bytes).decode('utf-8')
@@ -51,20 +60,16 @@ def validate_and_preview_pdf(pdf_content: bytes, expected_width: float, expected
             }
 
     except Exception as e:
-        # Este bloque ahora imprimirá el error completo en los logs de Vercel
         tb_str = traceback.format_exc()
         print(f"--- ERROR DETALLADO EN validate_and_preview_pdf ---\n{tb_str}\n--------------------")
         return {"isValid": False, "errorMessage": f"Error al procesar el PDF: {str(e)}"}
-    # --- FIN DEL CAMBIO ---
 
 
-def validate_and_create_imposition(sheet_config: Dict, jobs: List[Dict], job_files: Dict) -> bytes:
+def validate_and_create_imposition(sheet_config: Dict, jobs: List, job_files: Dict) -> bytes:
     """
     Valida las dimensiones de los PDFs subidos y crea el pliego impuesto.
     """
-    # 1. Validación de Dimensiones
     for job in jobs:
-        # ---> INICIO DEL BLOQUE QUE DEBE ESTAR INDENTADO
         job_name = job['job_name']
         expected_dims = job['trim_box']
         
@@ -95,16 +100,13 @@ def validate_and_create_imposition(sheet_config: Dict, jobs: List[Dict], job_fil
                     f"no coinciden con las esperadas ({expected_width}x{expected_height}mm), ni siquiera al rotarlo."
                 )
                 raise ValueError(error_msg)
-        # ---> FIN DEL BLOQUE INDENTADO
 
-    # 2. Creación del Pliego
     sheet_width_pt = sheet_config['width'] * (72 / 25.4)
     sheet_height_pt = sheet_config['length'] * (72 / 25.4)
     
     final_doc = fitz.open()
     final_page = final_doc.new_page(width=sheet_width_pt, height=sheet_height_pt)
 
-    # 3. Estampado de los trabajos
     for job in jobs:
         job_name = job['job_name']
         pdf_content = job_files[job_name]
@@ -112,9 +114,10 @@ def validate_and_create_imposition(sheet_config: Dict, jobs: List[Dict], job_fil
         
         with fitz.open(stream=pdf_content, filetype="pdf") as source_doc:
             source_page = source_doc[0]
+            
             source_trimbox = source_page.trimbox
             is_source_landscape = source_trimbox.width > source_trimbox.height
-
+            
             for pos in placements:
                 is_placement_landscape = pos['width'] > pos['length']
                 
