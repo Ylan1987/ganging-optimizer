@@ -32,7 +32,7 @@ def validate_and_preview_pdf(pdf_content: bytes, expected_width: float, expected
                 error_msg = f"Las dimensiones del TrimBox ({pdf_width_mm:.1f}x{pdf_height_mm:.1f}mm) no coinciden con las esperadas ({expected_width}x{expected_height}mm)."
                 return {"isValid": False, "errorMessage": error_msg}
             
-            pix = page.get_pixmap(dpi=72, clip=trimbox)
+            pix = page.get_pixmap(dpi=30, clip=trimbox)
 
             is_original_landscape = trimbox.width > trimbox.height
             is_placement_landscape = expected_width > expected_height
@@ -92,7 +92,11 @@ def validate_and_create_imposition(sheet_config: Dict, jobs: List[Dict], job_fil
 
     # 2. Creación del Pliego
     sheet_width_pt = sheet_config['width'] * (72 / 25.4)
-    sheet_height_pt = sheet_config['height'] * (72 / 25.4)
+    # --- INICIO DE LA NUEVA CORRECCIÓN ---
+    # Antes: usaba 'height', lo que causaba el error.
+    # Ahora: usa 'length', que es la clave correcta en el objeto sheet_config.
+    sheet_height_pt = sheet_config['length'] * (72 / 25.4)
+    # --- FIN DE LA NUEVA CORRECCIÓN ---
     
     final_doc = fitz.open()
     final_page = final_doc.new_page(width=sheet_width_pt, height=sheet_height_pt)
@@ -111,13 +115,9 @@ def validate_and_create_imposition(sheet_config: Dict, jobs: List[Dict], job_fil
             
             placement_width_pt = placements[0]['width'] * (72 / 25.4)
             
-            # --- INICIO DE LA CORRECCIÓN ---
-            # Antes: usaba 'height', lo que causaba el error.
-            # Ahora: usa 'length', que es la clave correcta en el objeto placement.
+            # Esta era la corrección anterior, que también es necesaria.
             is_placement_landscape = placement_width_pt > (placements[0]['length'] * (72 / 25.4))
-            # --- FIN DE LA CORRECCIÓN ---
 
-            # Reseteamos la rotación a 0 para evitar aplicar rotaciones múltiples si el objeto se reutiliza
             source_page.set_rotation(0)
             if is_source_landscape != is_placement_landscape:
                 source_page.set_rotation(90)
