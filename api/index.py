@@ -7,8 +7,11 @@ from . import imposition_service
 app = Flask(__name__)
 
 
-@app.route('/api/validate-and-preview-pdf', methods=['POST'])
+@app.route('/api/validate-and-preview-pdf', methods=['POST', 'OPTIONS'])
 def validate_and_preview_endpoint():
+    if request.method == 'OPTIONS':
+        return '', 204
+        
     if 'file' not in request.files:
         return jsonify({"error": "No se recibió ningún archivo."}), 400
     if 'expected_width' not in request.form or 'expected_height' not in request.form or 'bleed' not in request.form:
@@ -20,18 +23,20 @@ def validate_and_preview_endpoint():
     try:
         expected_width = float(request.form['expected_width'])
         expected_height = float(request.form['expected_height'])
-        bleed_mm = float(request.form['bleed']) # <--- AÑADIDO
+        bleed_mm = float(request.form['bleed'])
     except ValueError:
         return jsonify({"error": "Las dimensiones o el sangrado deben ser números."}), 400
-
+    
+    # Llamamos al servicio con todos los parámetros
     result = imposition_service.validate_and_preview_pdf(
         pdf_content=pdf_content,
         expected_width=expected_width,
         expected_height=expected_height,
-        bleed_mm=bleed_mm # <--- AÑADIDO
+        bleed_mm=bleed_mm
+    ) # <--- Este es el paréntesis de cierre que probablemente faltaba.
     
     if not result.get('isValid'):
-        # Devuelve un error 400 (Bad Request) si la validación falla
+        # Devuelve un error 400 si la validación falla
         return jsonify({"error": "PDF inválido", "details": result.get('errorMessage', 'Error desconocido')}), 400
         
     return jsonify(result), 200
