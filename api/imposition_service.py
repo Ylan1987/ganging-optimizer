@@ -6,7 +6,6 @@ import base64
 def validate_and_preview_pdf(pdf_content: bytes, expected_width: float, expected_height: float) -> Dict:
     """
     Valida las dimensiones del TrimBox de un PDF y genera una imagen de previsualización.
-    (Esta función ya está correcta)
     """
     try:
         with fitz.open(stream=pdf_content, filetype="pdf") as doc:
@@ -78,14 +77,10 @@ def validate_and_create_imposition(sheet_config: Dict, jobs: List[Dict], job_fil
             width_mm = trim_box.width * (25.4 / 72)
             height_mm = trim_box.height * (25.4 / 72)
 
-            # --- INICIO DE LA CORRECCIÓN ---
             expected_width = expected_dims['width']
             expected_height = expected_dims['height']
             
-            # Comprobamos si las dimensiones coinciden tal cual
             match_as_is = abs(width_mm - expected_width) < 1 and abs(height_mm - expected_height) < 1
-            
-            # Comprobamos si las dimensiones coinciden rotadas
             match_rotated = abs(width_mm - expected_height) < 1 and abs(height_mm - expected_width) < 1
             
             if not (match_as_is or match_rotated):
@@ -94,7 +89,6 @@ def validate_and_create_imposition(sheet_config: Dict, jobs: List[Dict], job_fil
                     f"no coinciden con las esperadas ({expected_width}x{expected_height}mm), ni siquiera al rotarlo."
                 )
                 raise ValueError(error_msg)
-            # --- FIN DE LA CORRECCIÓN ---
 
     # 2. Creación del Pliego
     sheet_width_pt = sheet_config['width'] * (72 / 25.4)
@@ -112,24 +106,26 @@ def validate_and_create_imposition(sheet_config: Dict, jobs: List[Dict], job_fil
         with fitz.open(stream=pdf_content, filetype="pdf") as source_doc:
             source_page = source_doc[0]
             
-            # --- NUEVA LÓGICA DE ROTACIÓN AL IMPONER ---
-            # Verificamos si el PDF necesita ser rotado para el estampado
             source_trimbox = source_page.trimbox
             is_source_landscape = source_trimbox.width > source_trimbox.height
             
-            # Tomamos las dimensiones del primer 'placement' como referencia para la orientación de destino
             placement_width_pt = placements[0]['width'] * (72 / 25.4)
-            is_placement_landscape = placement_width_pt > (placements[0]['height'] * (72 / 25.4))
+            
+            # --- INICIO DE LA CORRECCIÓN ---
+            # Antes: usaba 'height', lo que causaba el error.
+            # Ahora: usa 'length', que es la clave correcta en el objeto placement.
+            is_placement_landscape = placement_width_pt > (placements[0]['length'] * (72 / 25.4))
+            # --- FIN DE LA CORRECCIÓN ---
 
+            # Reseteamos la rotación a 0 para evitar aplicar rotaciones múltiples si el objeto se reutiliza
+            source_page.set_rotation(0)
             if is_source_landscape != is_placement_landscape:
                 source_page.set_rotation(90)
-            # --- FIN DE LA NUEVA LÓGICA ---
 
             for pos in placements:
                 x_pt = pos['x'] * (72 / 25.4)
                 y_pt = pos['y'] * (72 / 25.4)
                 
-                # Usamos el 'bound' de la página, que respeta la rotación que acabamos de aplicar
                 page_bound = source_page.bound()
                 rect = fitz.Rect(x_pt, y_pt, x_pt + page_bound.width, y_pt + page_bound.height)
                 final_page.show_pdf_page(rect, source_doc, 0)
