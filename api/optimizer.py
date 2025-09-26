@@ -35,13 +35,14 @@ class Job:
     width: int
     length: int
     quantity: int
+    bleed: int # <--- AÑADIDO
     rotatable: bool
     material: Material
     frontInks: int
     backInks: int
     isDuplex: bool
     samePlatesForBack: bool
-
+    
 @dataclass
 class Overage:
     amount: int
@@ -301,7 +302,9 @@ def calculate_base_solution(data, all_jobs):
                     if not (max(cut.width, cut.length) <= max(machine.maxSheetSize.width, machine.maxSheetSize.length) and \
                             min(cut.width, cut.length) <= min(machine.maxSheetSize.width, machine.maxSheetSize.length)):
                         continue
-                    plan = packer_grid_layout(cut.width, cut.length, job.width, job.length)
+                    imposition_width = job.width + (2 * job.bleed)
+                    imposition_length = job.length + (2 * job.bleed)
+                    plan = packer_grid_layout(cut.width, cut.length, imposition_width, imposition_length)
                     if plan['cutsPerSheet'] == 0: continue
                     cost_info = calculate_total_layout_cost({'jobs': {job.id: plan['cutsPerSheet']}, 'printing_sheet': cut}, all_jobs, machine, data.dollarRate)
                     if cost_info and cost_info['total_cost'] < best_option['total_cost']:
@@ -367,7 +370,10 @@ def generate_candidate_layouts(data: InputData, all_jobs: Dict[str, Job]):
                     packer = rectpack.newPacker()
                     for job_id, qty in cand['recipe'].items():
                         job = all_jobs[job_id]
-                        for _ in range(qty): packer.add_rect(job.width, job.length, rid=job_id)
+                        # Calculamos el tamaño final para el empaquetado
+                        imposition_width = job.width + (2 * job.bleed)
+                        imposition_length = job.length + (2 * job.bleed)
+                        for _ in range(qty): packer.add_rect(imposition_width, imposition_length, rid=job_id)
                     packer.add_bin(cut.width, cut.length)
                     packer.pack()
                     

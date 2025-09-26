@@ -118,20 +118,62 @@ def validate_and_create_imposition(sheet_config: Dict, jobs: List, job_files: Di
             source_trimbox = source_page.trimbox
             is_source_landscape = source_trimbox.width > source_trimbox.height
             
+            # AHORA
+            # Definimos las propiedades de las marcas de corte
+            mark_len = 8  # 8 puntos de largo (~2.8mm)
+            mark_color = (0, 0, 0) # Negro
+            mark_width = 0.3
+
             for pos in placements:
+                # La lógica para decidir la rotación se mantiene igual
                 is_placement_landscape = pos['width'] > pos['length']
-                
                 rotation_angle = 0
                 if is_source_landscape != is_placement_landscape:
                     rotation_angle = 90
                 
+                # --- 1. Usar el BleedBox para estampar ---
+                # Obtenemos el BleedBox. Si no existe, usamos el TrimBox como alternativa.
+                bleedbox = source_page.bleedbox
+                if bleedbox.is_empty:
+                    source_page.set_cropbox(source_page.trimbox)
+                else:
+                    source_page.set_cropbox(bleedbox)
+                    
+                # El rectángulo de destino en el pliego (usa las dimensiones del BleedBox calculadas por el optimizador)
                 x_pt = pos['x'] * (72 / 25.4)
                 y_pt = pos['y'] * (72 / 25.4)
-                
                 dest_width_pt = pos['width'] * (72 / 25.4)
                 dest_height_pt = pos['length'] * (72 / 25.4)
                 rect = fitz.Rect(x_pt, y_pt, x_pt + dest_width_pt, y_pt + dest_height_pt)
                 
+                # Estampamos el contenido del PDF (el área del BleedBox)
                 final_page.show_pdf_page(rect, source_doc, 0, rotate=rotation_angle)
+
+                # --- 2. Dibujar líneas de corte en el TrimBox ---
+                trimbox = source_page.trimbox
+                # Calculamos el margen de sangrado en cada eje
+                bleed_margin_x = (bleedbox.width - trimbox.width) / 2
+                bleed_margin_y = (bleedbox.height - trimbox.height) / 2
+                
+                # Calculamos las 4 esquinas del TrimBox DENTRO del rectángulo de destino
+                if rotation_angle == 0:
+                    tl = fitz.Point(rect.x0 + bleed_margin_x, rect.y0 + bleed_margin_y)
+                    br = fitz.Point(rect.x1 - bleed_margin_x, rect.y1 - bleed_margin_y)
+                else: # Si está rotado, los márgenes se invierten
+                    tl = fitz.Point(rect.x0 + bleed_margin_y, rect.y0 + bleed_margin_x)
+                    br = fitz.Point(rect.x1 - bleed_margin_y, rect.y1 - bleed_margin_x)
+
+                tr = fitz.Point(br.x, tl.y)
+                bl = fitz.Point(tl.x, br.y)
+                
+                # Dibujamos las 8 líneas de corte
+                final_page.draw_line(fitz.Point(tl.x - mark_len, tl.y), tl, color=mark_color, width=mark_width)
+                final_page.draw_line(fitz.Point(tl.x, tl.y - mark_len), tl, color=mark_color, width=mark_width)
+                final_page.draw_line(tr, fitz.Point(tr.x + mark_len, tr.y), color=mark_color, width=mark_width)
+                final_page.draw_line(fitz.Point(tr.x, tr.y - mark_len), tr, color=mark_color, width=mark_width)
+                final_page.draw_line(fitz.Point(bl.x - mark_len, bl.y), bl, color=mark_color, width=mark_width)
+                final_page.draw_line(bl, fitz.Point(bl.x, bl.y + mark_len), color=mark_color, width=mark_width)
+                final_page.draw_line(br, fitz.Point(br.x + mark_len, br.y), color=mark_color, width=mark_width)
+                final_page.draw_line(br, fitz.Point(br.x, br.y + mark_len), color=mark_color, width=mark_width)
     
     return final_doc.tobytes()
