@@ -32,14 +32,18 @@ def validate_and_preview_pdf(pdf_content: bytes, expected_width: float, expected
                 error_msg = f"Las dimensiones del TrimBox ({pdf_width_mm:.1f}x{pdf_height_mm:.1f}mm) no coinciden con las esperadas ({expected_width}x{expected_height}mm)."
                 return {"isValid": False, "errorMessage": error_msg}
             
-            pix = page.get_pixmap(dpi=30, clip=trimbox)
+            pix = page.get_pixmap(dpi=30, clip=trimbox) # DPI ajustado a 72 para pruebas
 
             is_original_landscape = trimbox.width > trimbox.height
             is_placement_landscape = expected_width > expected_height
             
             if is_original_landscape != is_placement_landscape:
                 mat = fitz.Matrix(0, 1, -1, 0, pix.height, 0)
-                pix = pix.transform(mat)
+                # --- INICIO DE LA CORRECCIÓN ---
+                # Método anterior (no compatible con versiones antiguas): pix.transform(mat)
+                # Método nuevo (compatible con todas las versiones): creamos un nuevo pixmap a partir del original, aplicando la matriz.
+                pix = fitz.Pixmap(pix, mat)
+                # --- FIN DE LA CORRECCIÓN ---
             
             img_bytes = pix.tobytes("png")
             base64_img = base64.b64encode(img_bytes).decode('utf-8')
@@ -53,7 +57,7 @@ def validate_and_preview_pdf(pdf_content: bytes, expected_width: float, expected
         return {"isValid": False, "errorMessage": f"Error al procesar el PDF: {str(e)}"}
 
 
-def validate_and_create_imposition(sheet_config: Dict, jobs: List[Dict], job_files: Dict) -> bytes:
+def validate_and_create_imposition(sheet_config: Dict, jobs: List, job_files: Dict) -> bytes:
     """
     Valida las dimensiones de los PDFs subidos y crea el pliego impuesto.
     """
@@ -92,11 +96,7 @@ def validate_and_create_imposition(sheet_config: Dict, jobs: List[Dict], job_fil
 
     # 2. Creación del Pliego
     sheet_width_pt = sheet_config['width'] * (72 / 25.4)
-    # --- INICIO DE LA NUEVA CORRECCIÓN ---
-    # Antes: usaba 'height', lo que causaba el error.
-    # Ahora: usa 'length', que es la clave correcta en el objeto sheet_config.
     sheet_height_pt = sheet_config['length'] * (72 / 25.4)
-    # --- FIN DE LA NUEVA CORRECCIÓN ---
     
     final_doc = fitz.open()
     final_page = final_doc.new_page(width=sheet_width_pt, height=sheet_height_pt)
@@ -113,21 +113,22 @@ def validate_and_create_imposition(sheet_config: Dict, jobs: List[Dict], job_fil
             source_trimbox = source_page.trimbox
             is_source_landscape = source_trimbox.width > source_trimbox.height
             
-            placement_width_pt = placements[0]['width'] * (72 / 25.4)
+            placement_width = placements[0]['width']
+            placement_length = placements[0]['length']
+            is_placement_landscape = placement_width > placement_length
             
-            # Esta era la corrección anterior, que también es necesaria.
-            is_placement_landscape = placement_width_pt > (placements[0]['length'] * (72 / 25.4))
-
-            source_page.set_rotation(0)
+            rotation_angle = 0
             if is_source_landscape != is_placement_landscape:
-                source_page.set_rotation(90)
+                rotation_angle = 90
 
             for pos in placements:
                 x_pt = pos['x'] * (72 / 25.4)
                 y_pt = pos['y'] * (72 / 25.4)
                 
-                page_bound = source_page.bound()
-                rect = fitz.Rect(x_pt, y_pt, x_pt + page_bound.width, y_pt + page_bound.height)
-                final_page.show_pdf_page(rect, source_doc, 0)
+                dest_width_pt = pos['width'] * (72 / 25.4)
+                dest_height_pt = pos['length'] * (72 / 25.4)
+                rect = fitz.Rect(x_pt, y_pt, x_pt + dest_width_pt, y_pt + dest_height_pt)
+                
+                final_page.show_pdf_page(rect, source_doc, 0, rotate=rotation_angle)
     
     return final_doc.tobytes()
