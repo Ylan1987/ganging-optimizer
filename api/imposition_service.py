@@ -57,13 +57,45 @@ def validate_and_create_imposition(sheet_config: Dict, jobs: List[Dict], job_fil
     """
     Valida las dimensiones de los PDFs subidos y crea el pliego impuesto.
     """
-    # 1. Validación de Dimensiones (sin cambios)
+    # 1. Validación de Dimensiones
     for job in jobs:
-        # ... (código de validación se mantiene igual) ...
+        # ---> INICIO DEL BLOQUE QUE DEBE ESTAR INDENTADO
+        job_name = job['job_name']
+        expected_dims = job['trim_box']
+        
+        if job_name not in job_files:
+            raise ValueError(f"Falta el archivo PDF para el trabajo: {job_name}")
 
-    # 2. Creación del Pliego (sin cambios)
+        pdf_content = job_files[job_name]
+        
+        with fitz.open(stream=pdf_content, filetype="pdf") as doc:
+            page = doc[0]
+            trim_box = page.trimbox
+            
+            if not trim_box:
+                 raise ValueError(f"El PDF para '{job_name}' no contiene un TrimBox definido.")
+            
+            width_mm = trim_box.width * (25.4 / 72)
+            height_mm = trim_box.height * (25.4 / 72)
+
+            expected_width = expected_dims['width']
+            expected_height = expected_dims['height']
+            
+            match_as_is = abs(width_mm - expected_width) < 1 and abs(height_mm - expected_height) < 1
+            match_rotated = abs(width_mm - expected_height) < 1 and abs(height_mm - expected_width) < 1
+            
+            if not (match_as_is or match_rotated):
+                error_msg = (
+                    f"Las dimensiones del PDF para '{job_name}' ({width_mm:.1f}x{height_mm:.1f}mm) "
+                    f"no coinciden con las esperadas ({expected_width}x{expected_height}mm), ni siquiera al rotarlo."
+                )
+                raise ValueError(error_msg)
+        # ---> FIN DEL BLOQUE INDENTADO
+
+    # 2. Creación del Pliego
     sheet_width_pt = sheet_config['width'] * (72 / 25.4)
     sheet_height_pt = sheet_config['length'] * (72 / 25.4)
+    
     final_doc = fitz.open()
     final_page = final_doc.new_page(width=sheet_width_pt, height=sheet_height_pt)
 
@@ -78,10 +110,7 @@ def validate_and_create_imposition(sheet_config: Dict, jobs: List[Dict], job_fil
             source_trimbox = source_page.trimbox
             is_source_landscape = source_trimbox.width > source_trimbox.height
 
-            # --- INICIO DE LA CORRECCIÓN ---
-            # La lógica de rotación se mueve DENTRO del bucle que itera por cada 'pos' (placement)
             for pos in placements:
-                # Se calcula la orientación para CADA casilla individualmente
                 is_placement_landscape = pos['width'] > pos['length']
                 
                 rotation_angle = 0
@@ -96,6 +125,5 @@ def validate_and_create_imposition(sheet_config: Dict, jobs: List[Dict], job_fil
                 rect = fitz.Rect(x_pt, y_pt, x_pt + dest_width_pt, y_pt + dest_height_pt)
                 
                 final_page.show_pdf_page(rect, source_doc, 0, rotate=rotation_angle)
-            # --- FIN DE LA CORRECCIÓN ---
     
     return final_doc.tobytes()
