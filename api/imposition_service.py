@@ -6,6 +6,7 @@ import base64
 def validate_and_preview_pdf(pdf_content: bytes, expected_width: float, expected_height: float) -> Dict:
     """
     Valida las dimensiones del TrimBox de un PDF y genera una imagen de previsualización.
+    (Esta función ya está correcta)
     """
     try:
         with fitz.open(stream=pdf_content, filetype="pdf") as doc:
@@ -31,29 +32,15 @@ def validate_and_preview_pdf(pdf_content: bytes, expected_width: float, expected
             if not ((width_match and height_match) or (rotated_width_match and rotated_height_match)):
                 error_msg = f"Las dimensiones del TrimBox ({pdf_width_mm:.1f}x{pdf_height_mm:.1f}mm) no coinciden con las esperadas ({expected_width}x{expected_height}mm)."
                 return {"isValid": False, "errorMessage": error_msg}
-
-            pdf_is_landscape = pdf_width_mm > pdf_height_mm
-            placement_is_landscape = expected_width > expected_height
-            rotation = 0
-            if pdf_is_landscape != placement_is_landscape:
-                rotation = 90
             
-            page.set_cropbox(trimbox)
-            
-            # --- INICIO DE LA CORRECCIÓN ---
+            pix = page.get_pixmap(dpi=72, clip=trimbox)
 
-            # Método anterior:
-            # zoom = 150 / 72 
-            # mat = fitz.Matrix(zoom, zoom).prerotate(rotation)
-            # pix = page.get_pixmap(matrix=mat)
-
-            # Método nuevo y optimizado:
-            # Generamos la imagen directamente a 72 DPI, ideal para previews rápidas.
-            # La matriz ahora solo se encarga de la rotación, no del zoom.
-            mat = fitz.Matrix().prerotate(rotation)
-            pix = page.get_pixmap(dpi=72, matrix=mat)
+            is_original_landscape = trimbox.width > trimbox.height
+            is_placement_landscape = expected_width > expected_height
             
-            # --- FIN DE LA CORRECCIÓN ---
+            if is_original_landscape != is_placement_landscape:
+                mat = fitz.Matrix(0, 1, -1, 0, pix.height, 0)
+                pix = pix.transformed(mat)
             
             img_bytes = pix.tobytes("png")
             base64_img = base64.b64encode(img_bytes).decode('utf-8')
@@ -70,8 +57,8 @@ def validate_and_preview_pdf(pdf_content: bytes, expected_width: float, expected
 def validate_and_create_imposition(sheet_config: Dict, jobs: List[Dict], job_files: Dict) -> bytes:
     """
     Valida las dimensiones de los PDFs subidos y crea el pliego impuesto.
-    (Esta función no necesita cambios y se mantiene igual)
     """
+    # 1. Validación de Dimensiones
     for job in jobs:
         job_name = job['job_name']
         expected_dims = job['trim_box']
@@ -85,18 +72,38 @@ def validate_and_create_imposition(sheet_config: Dict, jobs: List[Dict], job_fil
             page = doc[0]
             trim_box = page.trimbox
             
-            width_mm = round(trim_box.width * (25.4 / 72), 1)
-            height_mm = round(trim_box.height * (25.4 / 72), 1)
+            if not trim_box:
+                 raise ValueError(f"El PDF para '{job_name}' no contiene un TrimBox definido.")
+            
+            width_mm = trim_box.width * (25.4 / 72)
+            height_mm = trim_box.height * (25.4 / 72)
 
-            if not (abs(width_mm - expected_dims['width']) < 1 and abs(height_mm - expected_dims['height']) < 1):
-                raise ValueError(f"Las dimensiones del PDF para '{job_name}' ({width_mm}x{height_mm}mm) no coinciden con las guardadas ({expected_dims['width']}x{expected_dims['height']}mm).")
+            # --- INICIO DE LA CORRECCIÓN ---
+            expected_width = expected_dims['width']
+            expected_height = expected_dims['height']
+            
+            # Comprobamos si las dimensiones coinciden tal cual
+            match_as_is = abs(width_mm - expected_width) < 1 and abs(height_mm - expected_height) < 1
+            
+            # Comprobamos si las dimensiones coinciden rotadas
+            match_rotated = abs(width_mm - expected_height) < 1 and abs(height_mm - expected_width) < 1
+            
+            if not (match_as_is or match_rotated):
+                error_msg = (
+                    f"Las dimensiones del PDF para '{job_name}' ({width_mm:.1f}x{height_mm:.1f}mm) "
+                    f"no coinciden con las esperadas ({expected_width}x{expected_height}mm), ni siquiera al rotarlo."
+                )
+                raise ValueError(error_msg)
+            # --- FIN DE LA CORRECCIÓN ---
 
+    # 2. Creación del Pliego
     sheet_width_pt = sheet_config['width'] * (72 / 25.4)
     sheet_height_pt = sheet_config['height'] * (72 / 25.4)
     
     final_doc = fitz.open()
     final_page = final_doc.new_page(width=sheet_width_pt, height=sheet_height_pt)
 
+    # 3. Estampado de los trabajos
     for job in jobs:
         job_name = job['job_name']
         pdf_content = job_files[job_name]
@@ -104,10 +111,27 @@ def validate_and_create_imposition(sheet_config: Dict, jobs: List[Dict], job_fil
         
         with fitz.open(stream=pdf_content, filetype="pdf") as source_doc:
             source_page = source_doc[0]
+            
+            # --- NUEVA LÓGICA DE ROTACIÓN AL IMPONER ---
+            # Verificamos si el PDF necesita ser rotado para el estampado
+            source_trimbox = source_page.trimbox
+            is_source_landscape = source_trimbox.width > source_trimbox.height
+            
+            # Tomamos las dimensiones del primer 'placement' como referencia para la orientación de destino
+            placement_width_pt = placements[0]['width'] * (72 / 25.4)
+            is_placement_landscape = placement_width_pt > (placements[0]['height'] * (72 / 25.4))
+
+            if is_source_landscape != is_placement_landscape:
+                source_page.set_rotation(90)
+            # --- FIN DE LA NUEVA LÓGICA ---
+
             for pos in placements:
                 x_pt = pos['x'] * (72 / 25.4)
                 y_pt = pos['y'] * (72 / 25.4)
-                rect = fitz.Rect(x_pt, y_pt, x_pt + source_page.trimbox.width, y_pt + source_page.trimbox.height)
+                
+                # Usamos el 'bound' de la página, que respeta la rotación que acabamos de aplicar
+                page_bound = source_page.bound()
+                rect = fitz.Rect(x_pt, y_pt, x_pt + page_bound.width, y_pt + page_bound.height)
                 final_page.show_pdf_page(rect, source_doc, 0)
     
     return final_doc.tobytes()
