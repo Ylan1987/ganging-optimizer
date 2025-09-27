@@ -20,7 +20,6 @@ def validate_and_preview_pdf(pdf_content: bytes, expected_width: float, expected
 
         with fitz.open(stream=pdf_content, filetype="pdf") as doc:
             if not doc or len(doc) == 0: raise ValueError(f"El PDF para '{job_name}' está vacío.")
-                raise ValueError("No se pudo abrir el archivo PDF.")
             
             page = doc
             logging.info("PDF abierto correctamente.")
