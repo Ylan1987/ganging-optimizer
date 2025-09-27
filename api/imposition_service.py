@@ -155,16 +155,22 @@ def validate_and_create_imposition(sheet_config: Dict, jobs: List, job_files: Di
                 
                 final_page.show_pdf_page(rect, source_doc, 0, rotate=rotation_angle)
 
-                bleed_margin = user_bleed_pt
-                if rotation_angle == 0:
-                    tl = fitz.Point(rect.x0 + bleed_margin, rect.y0 + bleed_margin)
-                    br = fitz.Point(rect.x1 - bleed_margin, rect.y1 - bleed_margin)
-                else:
-                    tl = fitz.Point(rect.x0 + bleed_margin, rect.y0 + bleed_margin)
-                    br = fitz.Point(rect.x1 - bleed_margin, rect.y1 - bleed_margin)
+                # Se calculan las dimensiones del TrimBox después de la rotación
+                trim_w_pt, trim_h_pt = trimbox.width, trimbox.height
+                if rotation_angle == 90:
+                    trim_w_pt, trim_h_pt = trim_h_pt, trim_w_pt
                 
-                cut_coords_x.add(tl.x); cut_coords_x.add(br.x)
-                cut_coords_y.add(tl.y); cut_coords_y.add(br.y)
+                # Se calculan las esquinas basándose en el centro del rectángulo de destino
+                center_x = rect.x0 + dest_width_pt / 2
+                center_y = rect.y0 + dest_height_pt / 2
+                
+                tl_x = center_x - trim_w_pt / 2
+                tl_y = center_y - trim_h_pt / 2
+                br_x = center_x + trim_w_pt / 2
+                br_y = center_y + trim_h_pt / 2
+
+                cut_coords_x.add(tl_x); cut_coords_x.add(br_x)
+                cut_coords_y.add(tl_y); cut_coords_y.add(br_y)
 
     # 4. DIBUJO DE MARCAS DE CORTE PROFESIONALES
     mark_len = 14
