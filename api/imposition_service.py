@@ -3,6 +3,10 @@ import fitz  # PyMuPDF
 from typing import List, Dict, Any
 import base64
 import traceback
+import logging
+
+# Configuramos el logging para que sea simple y se muestre en Vercel
+logging.basicConfig(level=logging.INFO, format='%(message)s')
 
 def validate_and_preview_pdf(pdf_content: bytes, expected_width: float, expected_height: float, bleed_mm: float) -> Dict:
     """
@@ -56,7 +60,7 @@ def validate_and_preview_pdf(pdf_content: bytes, expected_width: float, expected
 
     except Exception as e:
         tb_str = traceback.format_exc()
-        print(f"--- ERROR DETALLADO EN validate_and_preview_pdf ---\n{tb_str}\n--------------------")
+        logging.error(f"--- ERROR DETALLADO EN validate_and_preview_pdf ---\n{tb_str}\n--------------------")
         return {"isValid": False, "errorMessage": f"Error al procesar el PDF: {str(e)}"}
 
 
@@ -64,7 +68,7 @@ def validate_and_create_imposition(sheet_config: Dict, jobs: List, job_files: Di
     """
     Valida, centra, impone los trabajos con sangrado y dibuja marcas de corte profesionales.
     """
-    # 1. VALIDACIÓN DE DIMENSIONES
+    # 1. Validación de Dimensiones
     for job in jobs:
         job_name = job['job_name']
         expected_dims = job['trim_box']
@@ -81,7 +85,7 @@ def validate_and_create_imposition(sheet_config: Dict, jobs: List, job_files: Di
             if not (match_as_is or match_rotated):
                 raise ValueError(f"Las dimensiones del PDF para '{job_name}' ({width_mm:.1f}x{height_mm:.1f}mm) no coinciden con las esperadas ({expected_width}x{expected_height}mm).")
 
-    # 2. CÁLCULO DE CENTRADO
+    # 2. CÁLCULO DE CENTRADO Y CREACIÓN DEL PLIEGO
     max_x_pt, max_y_pt = 0, 0
     for job in jobs:
         for pos in job['placements']:
@@ -96,13 +100,19 @@ def validate_and_create_imposition(sheet_config: Dict, jobs: List, job_files: Di
     sheet_height_pt = sheet_config['length'] * (72 / 25.4)
     x_offset = (sheet_width_pt - max_x_pt) / 2 if max_x_pt < sheet_width_pt else 0
     y_offset = (sheet_height_pt - max_y_pt) / 2 if max_y_pt < sheet_height_pt else 0
-    
-    # 3. CREACIÓN DEL PLIEGO Y PREPARACIÓN PARA MARCAS
+
+    logging.info("--- CÁLCULO DE CENTRADO (en mm) ---")
+    logging.info(f"Max(X) Ocupado: {max_x_pt / (72 / 25.4):.2f}")
+    logging.info(f"Max(Y) Ocupado: {max_y_pt / (72 / 25.4):.2f}")
+    logging.info(f"Margen_x: {x_offset / (72 / 25.4):.2f}")
+    logging.info(f"Margen_y: {y_offset / (72 / 25.4):.2f}")
+    logging.info("-------------------------------------")
+
     final_doc = fitz.open()
     final_page = final_doc.new_page(width=sheet_width_pt, height=sheet_height_pt)
     cut_coords_x, cut_coords_y = set(), set()
-    
-    # 4. ESTAMPADO Y RECOLECCIÓN DE COORDENADAS DE CORTE
+
+    # 3. ESTAMPADO Y RECOLECCIÓN DE COORDENADAS DE CORTE
     for job in jobs:
         job_name = job['job_name']
         pdf_content = job_files[job_name]
@@ -115,7 +125,6 @@ def validate_and_create_imposition(sheet_config: Dict, jobs: List, job_files: Di
             trimbox = source_page.trimbox
             is_source_landscape = trimbox.width > trimbox.height
 
-            # Lógica de Sangrado: se define el área a estampar usando TrimBox + Sangrado del usuario
             source_page.set_cropbox(fitz.Rect(
                 trimbox.x0 - user_bleed_pt,
                 trimbox.y0 - user_bleed_pt,
@@ -127,7 +136,17 @@ def validate_and_create_imposition(sheet_config: Dict, jobs: List, job_files: Di
                 is_placement_landscape = pos['width'] > pos['length']
                 rotation_angle = 90 if is_source_landscape != is_placement_landscape else 0
                 
-                # Se aplica el offset de centrado a la posición
+                x_inicial_mm = pos['x']
+                y_inicial_mm = pos['y']
+                x_final_mm = (x_inicial_mm * (72 / 25.4) + x_offset) / (72 / 25.4)
+                y_final_mm = (y_inicial_mm * (72 / 25.4) + y_offset) / (72 / 25.4)
+                
+                logging.info(f"\n--- Colocando Trabajo: {job_name} ---")
+                logging.info(f"  x_inicial: {x_inicial_mm:.2f} mm")
+                logging.info(f"  x_final:   {x_final_mm:.2f} mm")
+                logging.info(f"  y_inicial: {y_inicial_mm:.2f} mm")
+                logging.info(f"  y_final:   {y_final_mm:.2f} mm")
+
                 x_pt = (pos['x'] * (72 / 25.4)) + x_offset
                 y_pt = (pos['y'] * (72 / 25.4)) + y_offset
                 dest_width_pt = pos['width'] * (72 / 25.4)
@@ -136,32 +155,27 @@ def validate_and_create_imposition(sheet_config: Dict, jobs: List, job_files: Di
                 
                 final_page.show_pdf_page(rect, source_doc, 0, rotate=rotation_angle)
 
-                # Se calculan las esquinas del TrimBox en el pliego para guardar sus coordenadas
                 bleed_margin = user_bleed_pt
                 if rotation_angle == 0:
                     tl = fitz.Point(rect.x0 + bleed_margin, rect.y0 + bleed_margin)
                     br = fitz.Point(rect.x1 - bleed_margin, rect.y1 - bleed_margin)
-                else: # Si rota, los márgenes se invierten
+                else:
                     tl = fitz.Point(rect.x0 + bleed_margin, rect.y0 + bleed_margin)
                     br = fitz.Point(rect.x1 - bleed_margin, rect.y1 - bleed_margin)
                 
                 cut_coords_x.add(tl.x); cut_coords_x.add(br.x)
                 cut_coords_y.add(tl.y); cut_coords_y.add(br.y)
 
-    # 5. DIBUJO DE MARCAS DE CORTE PROFESIONALES
-    mark_len = 14  # ~5mm
+    # 4. DIBUJO DE MARCAS DE CORTE PROFESIONALES
+    mark_len = 14
     mark_color = (0, 0, 0)
     mark_width = 0.3
 
     for x in sorted(list(cut_coords_x)):
-        # Marcas superiores, desde el borde del área ocupada hacia afuera
         final_page.draw_line(fitz.Point(x, y_offset - mark_len), fitz.Point(x, y_offset), color=mark_color, width=mark_width)
-        # Marcas inferiores, desde el borde del área ocupada hacia afuera
         final_page.draw_line(fitz.Point(x, max_y_pt + y_offset), fitz.Point(x, max_y_pt + y_offset + mark_len), color=mark_color, width=mark_width)
     for y in sorted(list(cut_coords_y)):
-        # Marcas izquierdas
         final_page.draw_line(fitz.Point(x_offset - mark_len, y), fitz.Point(x_offset, y), color=mark_color, width=mark_width)
-        # Marcas derechas
         final_page.draw_line(fitz.Point(max_x_pt + x_offset, y), fitz.Point(max_x_pt + x_offset + mark_len, y), color=mark_color, width=mark_width)
     
     return final_doc.tobytes()
