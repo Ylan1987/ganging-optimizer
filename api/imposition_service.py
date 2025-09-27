@@ -19,7 +19,7 @@ def validate_and_preview_pdf(pdf_content: bytes, expected_width: float, expected
         logging.info(f"Dimensiones esperadas del placement (con sangrado): {expected_width}x{expected_height}, Sangrado: {bleed_mm}")
 
         with fitz.open(stream=pdf_content, filetype="pdf") as doc:
-            if not doc:
+            if not doc or len(doc) == 0: raise ValueError(f"El PDF para '{job_name}' está vacío.")
                 raise ValueError("No se pudo abrir el archivo PDF.")
             
             page = doc
@@ -100,6 +100,7 @@ def validate_and_create_imposition(sheet_config: Dict, jobs: List, job_files: Di
         if job_name not in job_files: raise ValueError(f"Falta el archivo PDF para el trabajo: {job_name}")
         pdf_content = job_files[job_name]
         with fitz.open(stream=pdf_content, filetype="pdf") as doc:
+            if not doc or len(doc) == 0: raise ValueError(f"El PDF para '{job_name}' está vacío.")
             page = doc
             trim_box = page.trimbox
             if not trim_box: raise ValueError(f"El PDF para '{job_name}' no contiene un TrimBox definido.")
