@@ -669,9 +669,9 @@ def align_placements(placements, threshold=5):
     y_coords = set()
     for p in placements:
         x_coords.add(p['x'])
-        x_coords.add(p['x'] + p['w'])
+        x_coords.add(p['x'] + p['width'])   # CORREGIDO: 'w' -> 'width'
         y_coords.add(p['y'])
-        y_coords.add(p['y'] + p['h'])
+        y_coords.add(p['y'] + p['length'])  # CORREGIDO: 'h' -> 'length'
 
     sorted_x = sorted(list(x_coords))
     sorted_y = sorted(list(y_coords))
@@ -691,7 +691,6 @@ def align_placements(placements, threshold=5):
                 current_cluster = [coords[i]]
         clusters.append(current_cluster)
         
-        # Crear un mapa de cada coordenada a su valor "maestro" (el más bajo del grupo)
         coord_map = {}
         for cluster in clusters:
             master_coord = min(cluster)
@@ -705,13 +704,11 @@ def align_placements(placements, threshold=5):
     # 3. Generar la nueva lista de placements con las coordenadas alineadas
     aligned = []
     for p in placements:
-        # Alineamos el inicio (x, y)
         new_x = x_map.get(p['x'], p['x'])
         new_y = y_map.get(p['y'], p['y'])
 
-        # Alineamos el final (x+w, y+h) y recalculamos el tamaño
-        end_x = x_map.get(p['x'] + p['w'], p['x'] + p['w'])
-        end_y = y_map.get(p['y'] + p['h'], p['y'] + p['h'])
+        end_x = x_map.get(p['x'] + p['width'], p['x'] + p['width'])   # CORREGIDO: 'w' -> 'width'
+        end_y = y_map.get(p['y'] + p['length'], p['y'] + p['length']) # CORREGIDO: 'h' -> 'length'
         
         new_w = end_x - new_x
         new_h = end_y - new_y
@@ -720,15 +717,11 @@ def align_placements(placements, threshold=5):
             'id': p['id'],
             'x': new_x,
             'y': new_y,
-            'w': new_w,
-            'h': new_h,
-            # Mantenemos width/length por consistencia, aunque son redundantes
-            'width': new_w,
+            'width': new_w,  # CORREGIDO: Usar nombres consistentes
             'length': new_h
         })
 
     return aligned
-
 if __name__ == '__main__':
     if len(sys.argv) != 2:
         print("Uso: python optimizer.py <ruta_del_archivo_input.json>")
