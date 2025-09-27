@@ -525,9 +525,8 @@ def solve_optimal_plan(data, all_jobs, base_layouts, candidate_layouts):
             for layout in solution['layouts'].values():
                 if 'placements' in layout:
                     original_placements = layout['placements']
-                    aligned = align_placements(original_placements)
+                    aligned = align_placements(original_placements) # Se llama a la función corregida
                     layout['placements'] = aligned
-    # --- FIN DEL CAMBIO ---
     return found_solutions
 # endregion
 
@@ -658,13 +657,11 @@ def main(input_path):
 
 def align_placements(placements, threshold=5):
     """
-    Post-procesa los placements para forzar la alineación en una grilla,
-    corrigiendo pequeñas desviaciones del optimizador.
+    Post-procesa los placements para forzar la alineación en una grilla.
     """
     if not placements:
         return []
 
-    # 1. Recolectar todas las coordenadas de inicio y fin para cada eje
     x_coords = set()
     y_coords = set()
     for p in placements:
@@ -676,11 +673,8 @@ def align_placements(placements, threshold=5):
     sorted_x = sorted(list(x_coords))
     sorted_y = sorted(list(y_coords))
 
-    # 2. Agrupar (cluster) coordenadas cercanas
     def cluster_coords(coords):
-        if not coords:
-            return {}
-        
+        if not coords: return {}
         clusters = []
         current_cluster = [coords[0]]
         for i in range(1, len(coords)):
@@ -701,11 +695,10 @@ def align_placements(placements, threshold=5):
     x_map = cluster_coords(sorted_x)
     y_map = cluster_coords(sorted_y)
 
-    # 3. Generar la nueva lista de placements con las coordenadas alineadas
     aligned = []
     for p in placements:
         new_x = x_map.get(p['x'], p['x'])
-        new_y = y_map.get(p['y'], p['y'])
+        new_y = x_map.get(p['y'], p['y'])
 
         end_x = x_map.get(p['x'] + p['width'], p['x'] + p['width'])   # Usa 'width'
         end_y = y_map.get(p['y'] + p['length'], p['y'] + p['length']) # Usa 'length'
@@ -720,7 +713,6 @@ def align_placements(placements, threshold=5):
             'width': new_w,
             'length': new_h
         })
-
     return aligned
 
 if __name__ == '__main__':
