@@ -698,11 +698,9 @@ def align_placements(placements, threshold=5):
     aligned = []
     for p in placements:
         new_x = x_map.get(p['x'], p['x'])
-        new_y = x_map.get(p['y'], p['y'])
-
-        end_x = x_map.get(p['x'] + p['width'], p['x'] + p['width'])   # Usa 'width'
-        end_y = y_map.get(p['y'] + p['length'], p['y'] + p['length']) # Usa 'length'
-        
+        new_y = y_map.get(p['y'], p['y'])
+        end_x = x_map.get(p['x'] + p['width'], p['x'] + p['width'])
+        end_y = y_map.get(p['y'] + p['length'], p['y'] + p['length'])
         new_w = end_x - new_x
         new_h = end_y - new_y
         
