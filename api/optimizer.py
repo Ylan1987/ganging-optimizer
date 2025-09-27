@@ -8,6 +8,7 @@ import rectpack
 from itertools import chain, combinations, product
 from dataclasses import dataclass, field
 from typing import List, Dict, Any
+import rectpack.guillotine as guillotine
 
 # region ESTRUCTURAS DE DATOS (Actualizadas para el nuevo Input)
 @dataclass
@@ -367,7 +368,8 @@ def generate_candidate_layouts(data: InputData, all_jobs: Dict[str, Job]):
                 log(f"      > {len(candidates)} combinaciones de área válidas encontradas. Probando con el dibujante...")
 
                 for cand in candidates:
-                    packer = rectpack.newPacker()
+                    # Le indicamos al packer que use un algoritmo de guillotina
+                    packer = rectpack.newPacker(pack_algo=guillotine.GuillotineBafSas) 
                     for job_id, qty in cand['recipe'].items():
                         job = all_jobs[job_id]
                         # Calculamos el tamaño final para el empaquetado
@@ -519,14 +521,6 @@ def solve_optimal_plan(data, all_jobs, base_layouts, candidate_layouts):
         else:
             log("  > No se encontraron más soluciones.")
             break # Salir del bucle si el solver no encuentra más opciones
-    # Una vez que tenemos una solución, la pasamos por la función de alineación
-    if found_solutions:
-        for solution in found_solutions:
-            for layout in solution['layouts'].values():
-                if 'placements' in layout:
-                    original_placements = layout['placements']
-                    aligned = align_placements(original_placements)
-                    layout['placements'] = aligned
     return found_solutions
 # endregion
 
@@ -656,7 +650,7 @@ def main(input_path):
     log("Proceso completado. La solución está en 'output.json'.")
 
 # AHORA (Corregido)
-def align_placements(placements, threshold=5):
+'''def align_placements(placements, threshold=5):
     """
     Post-procesa los placements para forzar la alineación en una grilla,
     MOVIENDO los trabajos sin cambiar su tamaño.
@@ -706,7 +700,7 @@ def align_placements(placements, threshold=5):
         })
 
     return aligned
-
+'''
 if __name__ == '__main__':
     if len(sys.argv) != 2:
         print("Uso: python optimizer.py <ruta_del_archivo_input.json>")
