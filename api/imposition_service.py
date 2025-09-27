@@ -136,24 +136,25 @@ def validate_and_create_imposition(sheet_config: Dict, jobs: List, job_files: Di
                 is_placement_landscape = pos['width'] > pos['length']
                 rotation_angle = 90 if is_source_landscape != is_placement_landscape else 0
                 
-                x_inicial_mm = pos['x']
-                y_inicial_mm = pos['y']
-                x_final_mm = (x_inicial_mm * (72 / 25.4) + x_offset) / (72 / 25.4)
-                y_final_mm = (y_inicial_mm * (72 / 25.4) + y_offset) / (72 / 25.4)
-                
-                logging.info(f"\n--- Colocando Trabajo: {job_name} ---")
-                logging.info(f"  x_inicial: {x_inicial_mm:.2f} mm")
-                logging.info(f"  x_final:   {x_final_mm:.2f} mm")
-                logging.info(f"  y_inicial: {y_inicial_mm:.2f} mm")
-                logging.info(f"  y_final:   {y_final_mm:.2f} mm")
-
                 x_pt = (pos['x'] * (72 / 25.4)) + x_offset
                 y_pt = (pos['y'] * (72 / 25.4)) + y_offset
                 dest_width_pt = pos['width'] * (72 / 25.4)
                 dest_height_pt = pos['length'] * (72 / 25.4)
                 rect = fitz.Rect(x_pt, y_pt, x_pt + dest_width_pt, y_pt + dest_height_pt)
                 
+                # --- INICIO DE LA LÓGICA DE LOGGING ---
+                logging.info(f"--- Colocando '{job_name}' en el pliego ---")
+                logging.info(f"  Coordenadas del Rect (en mm):")
+                logging.info(f"    - x0: {rect.x0 / (72 / 25.4):.2f}")
+                logging.info(f"    - y0: {rect.y0 / (72 / 25.4):.2f}")
+                logging.info(f"  Dimensiones del Rect (en mm):")
+                logging.info(f"    - Ancho: {rect.width / (72 / 25.4):.2f}")
+                logging.info(f"    - Alto: {rect.height / (72 / 25.4):.2f}")
+                logging.info(f"  Rotación aplicada: {rotation_angle} grados")
+                # --- FIN DE LA LÓGICA DE LOGGING ---
+
                 final_page.show_pdf_page(rect, source_doc, 0, rotate=rotation_angle)
+
 
                 # Se calculan las dimensiones del TrimBox después de la rotación
                 trim_w_pt, trim_h_pt = trimbox.width, trimbox.height
