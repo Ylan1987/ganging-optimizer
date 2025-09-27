@@ -655,24 +655,23 @@ def main(input_path):
         json.dump(output, f, ensure_ascii=False, indent=2, default=custom_serializer)
     log("Proceso completado. La solución está en 'output.json'.")
 
+# AHORA (Corregido)
 def align_placements(placements, threshold=5):
     """
-    Post-procesa los placements para forzar la alineación en una grilla.
+    Post-procesa los placements para forzar la alineación en una grilla,
+    MOVIENDO los trabajos sin cambiar su tamaño.
     """
     if not placements:
         return []
 
-    x_coords = set()
-    y_coords = set()
-    for p in placements:
-        x_coords.add(p['x'])
-        x_coords.add(p['x'] + p['width'])   # Usa 'width'
-        y_coords.add(p['y'])
-        y_coords.add(p['y'] + p['length'])  # Usa 'length'
+    # 1. Recolectar solo las coordenadas de INICIO (x, y)
+    x_coords = set(p['x'] for p in placements)
+    y_coords = set(p['y'] for p in placements)
 
     sorted_x = sorted(list(x_coords))
     sorted_y = sorted(list(y_coords))
 
+    # 2. Agrupar (cluster) coordenadas cercanas para encontrar las "líneas maestras"
     def cluster_coords(coords):
         if not coords: return {}
         clusters = []
@@ -695,22 +694,17 @@ def align_placements(placements, threshold=5):
     x_map = cluster_coords(sorted_x)
     y_map = cluster_coords(sorted_y)
 
+    # 3. Generar la nueva lista de placements moviendo los trabajos SIN cambiar su tamaño
     aligned = []
     for p in placements:
-        new_x = x_map.get(p['x'], p['x'])
-        new_y = y_map.get(p['y'], p['y'])
-        end_x = x_map.get(p['x'] + p['width'], p['x'] + p['width'])
-        end_y = y_map.get(p['y'] + p['length'], p['y'] + p['length'])
-        new_w = end_x - new_x
-        new_h = end_y - new_y
-        
         aligned.append({
             'id': p['id'],
-            'x': new_x,
-            'y': new_y,
-            'width': new_w,
-            'length': new_h
+            'x': x_map.get(p['x'], p['x']),      # Se MUEVE la coordenada X a la línea maestra
+            'y': y_map.get(p['y'], p['y']),      # Se MUEVE la coordenada Y a la línea maestra
+            'width': p['width'],                # Se MANTIENE el ancho original
+            'length': p['length']               # Se MANTIENE el largo original
         })
+
     return aligned
 
 if __name__ == '__main__':
