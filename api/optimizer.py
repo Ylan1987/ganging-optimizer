@@ -669,9 +669,9 @@ def align_placements(placements, threshold=5):
     y_coords = set()
     for p in placements:
         x_coords.add(p['x'])
-        x_coords.add(p['x'] + p['width'])   # CORREGIDO: 'w' -> 'width'
+        x_coords.add(p['x'] + p['width'])   # Usa 'width'
         y_coords.add(p['y'])
-        y_coords.add(p['y'] + p['length'])  # CORREGIDO: 'h' -> 'length'
+        y_coords.add(p['y'] + p['length'])  # Usa 'length'
 
     sorted_x = sorted(list(x_coords))
     sorted_y = sorted(list(y_coords))
@@ -707,8 +707,8 @@ def align_placements(placements, threshold=5):
         new_x = x_map.get(p['x'], p['x'])
         new_y = y_map.get(p['y'], p['y'])
 
-        end_x = x_map.get(p['x'] + p['width'], p['x'] + p['width'])   # CORREGIDO: 'w' -> 'width'
-        end_y = y_map.get(p['y'] + p['length'], p['y'] + p['length']) # CORREGIDO: 'h' -> 'length'
+        end_x = x_map.get(p['x'] + p['width'], p['x'] + p['width'])   # Usa 'width'
+        end_y = y_map.get(p['y'] + p['length'], p['y'] + p['length']) # Usa 'length'
         
         new_w = end_x - new_x
         new_h = end_y - new_y
@@ -717,11 +717,12 @@ def align_placements(placements, threshold=5):
             'id': p['id'],
             'x': new_x,
             'y': new_y,
-            'width': new_w,  # CORREGIDO: Usar nombres consistentes
+            'width': new_w,
             'length': new_h
         })
 
     return aligned
+
 if __name__ == '__main__':
     if len(sys.argv) != 2:
         print("Uso: python optimizer.py <ruta_del_archivo_input.json>")
