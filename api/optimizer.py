@@ -519,7 +519,15 @@ def solve_optimal_plan(data, all_jobs, base_layouts, candidate_layouts):
         else:
             log("  > No se encontraron más soluciones.")
             break # Salir del bucle si el solver no encuentra más opciones
-
+    # Una vez que tenemos una solución, la pasamos por la función de alineación
+    if found_solutions:
+        for solution in found_solutions:
+            for layout in solution['layouts'].values():
+                if 'placements' in layout:
+                    original_placements = layout['placements']
+                    aligned = align_placements(original_placements)
+                    layout['placements'] = aligned
+    # --- FIN DEL CAMBIO ---
     return found_solutions
 # endregion
 
@@ -647,6 +655,79 @@ def main(input_path):
         def custom_serializer(o): return o.__dict__ if hasattr(o, '__dict__') else str(o)
         json.dump(output, f, ensure_ascii=False, indent=2, default=custom_serializer)
     log("Proceso completado. La solución está en 'output.json'.")
+
+def align_placements(placements, threshold=5):
+    """
+    Post-procesa los placements para forzar la alineación en una grilla,
+    corrigiendo pequeñas desviaciones del optimizador.
+    """
+    if not placements:
+        return []
+
+    # 1. Recolectar todas las coordenadas de inicio y fin para cada eje
+    x_coords = set()
+    y_coords = set()
+    for p in placements:
+        x_coords.add(p['x'])
+        x_coords.add(p['x'] + p['w'])
+        y_coords.add(p['y'])
+        y_coords.add(p['y'] + p['h'])
+
+    sorted_x = sorted(list(x_coords))
+    sorted_y = sorted(list(y_coords))
+
+    # 2. Agrupar (cluster) coordenadas cercanas
+    def cluster_coords(coords):
+        if not coords:
+            return {}
+        
+        clusters = []
+        current_cluster = [coords[0]]
+        for i in range(1, len(coords)):
+            if coords[i] - current_cluster[-1] <= threshold:
+                current_cluster.append(coords[i])
+            else:
+                clusters.append(current_cluster)
+                current_cluster = [coords[i]]
+        clusters.append(current_cluster)
+        
+        # Crear un mapa de cada coordenada a su valor "maestro" (el más bajo del grupo)
+        coord_map = {}
+        for cluster in clusters:
+            master_coord = min(cluster)
+            for c in cluster:
+                coord_map[c] = master_coord
+        return coord_map
+
+    x_map = cluster_coords(sorted_x)
+    y_map = cluster_coords(sorted_y)
+
+    # 3. Generar la nueva lista de placements con las coordenadas alineadas
+    aligned = []
+    for p in placements:
+        # Alineamos el inicio (x, y)
+        new_x = x_map.get(p['x'], p['x'])
+        new_y = y_map.get(p['y'], p['y'])
+
+        # Alineamos el final (x+w, y+h) y recalculamos el tamaño
+        end_x = x_map.get(p['x'] + p['w'], p['x'] + p['w'])
+        end_y = y_map.get(p['y'] + p['h'], p['y'] + p['h'])
+        
+        new_w = end_x - new_x
+        new_h = end_y - new_y
+        
+        aligned.append({
+            'id': p['id'],
+            'x': new_x,
+            'y': new_y,
+            'w': new_w,
+            'h': new_h,
+            # Mantenemos width/length por consistencia, aunque son redundantes
+            'width': new_w,
+            'length': new_h
+        })
+
+    return aligned
 
 if __name__ == '__main__':
     if len(sys.argv) != 2:
