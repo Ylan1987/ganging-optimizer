@@ -525,7 +525,7 @@ def solve_optimal_plan(data, all_jobs, base_layouts, candidate_layouts):
             for layout in solution['layouts'].values():
                 if 'placements' in layout:
                     original_placements = layout['placements']
-                    aligned = align_placements(original_placements) # Se llama a la función corregida
+                    aligned = align_placements(original_placements)
                     layout['placements'] = aligned
     return found_solutions
 # endregion

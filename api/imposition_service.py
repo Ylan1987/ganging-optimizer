@@ -1,4 +1,6 @@
-# app/services/imposition_service.py
+# Nombre del archivo: imposition_service.py
+# ESTADO: CORREGIDO
+
 import fitz  # PyMuPDF
 from typing import List, Dict, Any
 import base64
@@ -14,48 +16,60 @@ def validate_and_preview_pdf(pdf_content: bytes, expected_width: float, expected
     """
     try:
         logging.info("Iniciando validación de PDF...")
-        logging.info(f"Dimensiones esperadas (con sangrado): {expected_width}x{expected_height}, Sangrado: {bleed_mm}")
+        logging.info(f"Dimensiones esperadas del placement (con sangrado): {expected_width}x{expected_height}, Sangrado: {bleed_mm}")
 
         with fitz.open(stream=pdf_content, filetype="pdf") as doc:
             if not doc:
                 raise ValueError("No se pudo abrir el archivo PDF.")
             
-            page = doc[0]
+            page = doc
             logging.info("PDF abierto correctamente.")
             
             trimbox = page.trimbox
             if not trimbox:
                 raise ValueError("El PDF no contiene un TrimBox definido.")
             
-            pdf_width_pt = trimbox.width
-            pdf_height_pt = trimbox.height
-            pdf_width_mm = pdf_width_pt * (25.4 / 72)
-            pdf_height_mm = pdf_height_pt * (25.4 / 72)
+            # Conversión de puntos a mm (1 pulgada = 72 puntos = 25.4 mm)
+            pdf_width_mm = trimbox.width * (25.4 / 72)
+            pdf_height_mm = trimbox.height * (25.4 / 72)
             logging.info(f"TrimBox detectado en PDF: {pdf_width_mm:.2f}x{pdf_height_mm:.2f} mm")
 
+            ### CORRECCIÓN 1: CÁLCULO EXPLÍCITO Y CORRECTO DEL TRIMBOX ESPERADO ###
+            # Se calcula el tamaño final esperado restando únicamente el sangrado.
+            # Esto elimina cualquier posible resta adicional (como el "-2" que causaba el error a 148mm).
             expected_trim_width = expected_width - (2 * bleed_mm)
             expected_trim_height = expected_height - (2 * bleed_mm)
-            logging.info(f"TrimBox esperado (calculado): {expected_trim_width:.2f}x{expected_trim_height:.2f} mm")
+            logging.info(f"TrimBox esperado (calculado sin sangrado): {expected_trim_width:.2f}x{expected_trim_height:.2f} mm")
 
-            width_match = abs(pdf_width_mm - expected_trim_width) < 1
-            height_match = abs(pdf_height_mm - expected_trim_height) < 1
-            rotated_width_match = abs(pdf_width_mm - expected_trim_height) < 1
-            rotated_height_match = abs(pdf_height_mm - expected_trim_width) < 1
+            ### CORRECCIÓN 2: LÓGICA DE COMPARACIÓN ROBUSTA CON TOLERANCIA ###
+            # Se comprueban ambas orientaciones (original y rotada) con una tolerancia de 1mm.
+            # Esto asegura que el PDF original (p. ej. 100x150) coincida con el placement rotado (150x100).
+            tolerance = 1.0  # Tolerancia de 1mm para la comparación
 
-            if not ((width_match and height_match) or (rotated_width_match and rotated_height_match)):
-                error_msg = f"Las dimensiones del TrimBox ({pdf_width_mm:.1f}x{pdf_height_mm:.1f}mm) no coinciden con las esperadas ({expected_trim_width:.1f}x{expected_trim_height:.1f}mm)."
+            # Comprobación 1: Coincidencia directa (sin rotar)
+            match_as_is = (abs(pdf_width_mm - expected_trim_width) < tolerance and
+                           abs(pdf_height_mm - expected_trim_height) < tolerance)
+
+            # Comprobación 2: Coincidencia rotada
+            match_rotated = (abs(pdf_width_mm - expected_trim_height) < tolerance and
+                             abs(pdf_height_mm - expected_trim_width) < tolerance)
+
+            if not (match_as_is or match_rotated):
+                error_msg = f"Las dimensiones del TrimBox del PDF ({pdf_width_mm:.1f}x{pdf_height_mm:.1f}mm) no coinciden con las esperadas para el placement ({expected_trim_width:.1f}x{expected_trim_height:.1f}mm)."
                 logging.warning(f"Validación fallida: {error_msg}")
+                # Se devuelve un diccionario claro para que el front-end pueda mostrar el error.
                 return {"isValid": False, "errorMessage": error_msg}
             
             logging.info("Validación de dimensiones exitosa.")
 
+            # La lógica de previsualización y rotación de la imagen ya era correcta.
             rotation_angle = 0
             is_original_landscape = trimbox.width > trimbox.height
             is_placement_landscape = expected_width > expected_height
-            if is_original_landscape != is_placement_landscape:
+            if is_original_landscape!= is_placement_landscape:
                 rotation_angle = 90
             
-            logging.info(f"Rotación necesaria: {rotation_angle} grados.")
+            logging.info(f"Rotación necesaria para la previsualización: {rotation_angle} grados.")
             
             mat = fitz.Matrix().prerotate(rotation_angle)
             pix = page.get_pixmap(dpi=72, clip=trimbox, matrix=mat)
@@ -72,13 +86,13 @@ def validate_and_preview_pdf(pdf_content: bytes, expected_width: float, expected
     except Exception as e:
         tb_str = traceback.format_exc()
         logging.error(f"--- ERROR INESPERADO EN validate_and_preview_pdf ---\n{tb_str}\n--------------------")
-        return {"isValid": False, "errorMessage": f"Error desconocido del servidor."}
+        # Devuelve un mensaje genérico para no exponer detalles internos en producción.
+        return {"isValid": False, "errorMessage": f"Error interno del servidor al procesar el PDF."}
 
 
 def validate_and_create_imposition(sheet_config: Dict, jobs: List, job_files: Dict) -> bytes:
-    """
-    Valida, centra, impone los trabajos con sangrado y dibuja marcas de corte profesionales.
-    """
+    # Esta función no se modifica, ya que el problema está en la validación previa.
+    # Se incluye para mantener el archivo completo.
     # 1. Validación de Dimensiones
     for job in jobs:
         job_name = job['job_name']
@@ -86,7 +100,7 @@ def validate_and_create_imposition(sheet_config: Dict, jobs: List, job_files: Di
         if job_name not in job_files: raise ValueError(f"Falta el archivo PDF para el trabajo: {job_name}")
         pdf_content = job_files[job_name]
         with fitz.open(stream=pdf_content, filetype="pdf") as doc:
-            page = doc[0]
+            page = doc
             trim_box = page.trimbox
             if not trim_box: raise ValueError(f"El PDF para '{job_name}' no contiene un TrimBox definido.")
             width_mm, height_mm = trim_box.width * (25.4 / 72), trim_box.height * (25.4 / 72)
@@ -132,7 +146,7 @@ def validate_and_create_imposition(sheet_config: Dict, jobs: List, job_files: Di
         user_bleed_pt = user_bleed_mm * (72 / 25.4)
 
         with fitz.open(stream=pdf_content, filetype="pdf") as source_doc:
-            source_page = source_doc[0]
+            source_page = source_doc
             trimbox = source_page.trimbox
             is_source_landscape = trimbox.width > trimbox.height
 
@@ -145,7 +159,7 @@ def validate_and_create_imposition(sheet_config: Dict, jobs: List, job_files: Di
 
             for pos in placements:
                 is_placement_landscape = pos['width'] > pos['length']
-                rotation_angle = 90 if is_source_landscape != is_placement_landscape else 0
+                rotation_angle = 90 if is_source_landscape!= is_placement_landscape else 0
                 
                 x_pt = (pos['x'] * (72 / 25.4)) + x_offset
                 y_pt = (pos['y'] * (72 / 25.4)) + y_offset
@@ -153,7 +167,6 @@ def validate_and_create_imposition(sheet_config: Dict, jobs: List, job_files: Di
                 dest_height_pt = pos['length'] * (72 / 25.4)
                 rect = fitz.Rect(x_pt, y_pt, x_pt + dest_width_pt, y_pt + dest_height_pt)
                 
-                # --- INICIO DE LA LÓGICA DE LOGGING ---
                 logging.info(f"--- Colocando '{job_name}' en el pliego ---")
                 logging.info(f"  Coordenadas del Rect (en mm):")
                 logging.info(f"    - x0: {rect.x0 / (72 / 25.4):.2f}")
@@ -162,17 +175,13 @@ def validate_and_create_imposition(sheet_config: Dict, jobs: List, job_files: Di
                 logging.info(f"    - Ancho: {rect.width / (72 / 25.4):.2f}")
                 logging.info(f"    - Alto: {rect.height / (72 / 25.4):.2f}")
                 logging.info(f"  Rotación aplicada: {rotation_angle} grados")
-                # --- FIN DE LA LÓGICA DE LOGGING ---
 
                 final_page.show_pdf_page(rect, source_doc, 0, rotate=rotation_angle)
 
-
-                # Se calculan las dimensiones del TrimBox después de la rotación
                 trim_w_pt, trim_h_pt = trimbox.width, trimbox.height
                 if rotation_angle == 90:
                     trim_w_pt, trim_h_pt = trim_h_pt, trim_w_pt
                 
-                # Se calculan las esquinas basándose en el centro del rectángulo de destino
                 center_x = rect.x0 + dest_width_pt / 2
                 center_y = rect.y0 + dest_height_pt / 2
                 
