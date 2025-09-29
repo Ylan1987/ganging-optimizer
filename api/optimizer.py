@@ -370,7 +370,8 @@ def generate_candidate_layouts(data: InputData, all_jobs: Dict[str, Job]):
 
                 for cand in candidates:
                     # Le indicamos al packer que use un algoritmo de guillotina
-                    packer = rectpack.newPacker(pack_algo=guillotine.GuillotineBssfMaxas) 
+                    packer = rectpack.newPacker(sort_algo=rectpack.SORT_AREA, 
+                        pack_algo=guillotine.GuillotineBssfMaxas) 
                     for job_id, qty in cand['recipe'].items():
                         job = all_jobs[job_id]
                         # Calculamos el tamaño final para el empaquetado
@@ -378,7 +379,7 @@ def generate_candidate_layouts(data: InputData, all_jobs: Dict[str, Job]):
                         imposition_length = job.length + (2 * job.bleed)
                         for _ in range(qty): packer.add_rect(imposition_width, imposition_length, rid=job_id)
                     packer.add_bin(cut.width, cut.length)
-                    packer.pack(sort_algo=rectpack.Packer.SORT_AREA)
+                    packer.pack()
                     
                     # 1. Primero, verificamos que el packer NO esté vacío.
                     #    Si lo está, significa que el dibujante falló.
