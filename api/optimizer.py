@@ -378,7 +378,7 @@ def generate_candidate_layouts(data: InputData, all_jobs: Dict[str, Job]):
                         imposition_length = job.length + (2 * job.bleed)
                         for _ in range(qty): packer.add_rect(imposition_width, imposition_length, rid=job_id)
                     packer.add_bin(cut.width, cut.length)
-                    packer.pack(sort_algo=SORT_AREA
+                    packer.pack(sort_algo=SORT_AREA)
                     
                     # 1. Primero, verificamos que el packer NO esté vacío.
                     #    Si lo está, significa que el dibujante falló.
