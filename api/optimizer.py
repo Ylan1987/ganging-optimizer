@@ -522,14 +522,14 @@ def solve_optimal_plan(data, all_jobs, base_layouts, candidate_layouts):
         else:
             log("  > No se encontraron más soluciones.")
             break # Salir del bucle si el solver no encuentra más opciones
-    if found_solutions:
+    '''if found_solutions:
         for solution in found_solutions:
             for layout in solution['layouts'].values():
                 if 'placements' in layout:
                     original_placements = layout['placements']
                     aligned = align_placements(original_placements)
                     layout['placements'] = aligned
-    
+    '''
     return found_solutions
 # endregion
 
