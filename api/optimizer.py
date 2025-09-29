@@ -522,14 +522,14 @@ def solve_optimal_plan(data, all_jobs, base_layouts, candidate_layouts):
         else:
             log("  > No se encontraron más soluciones.")
             break # Salir del bucle si el solver no encuentra más opciones
-    '''if found_solutions:
+    if found_solutions:
         for solution in found_solutions:
             for layout in solution['layouts'].values():
                 if 'placements' in layout:
                     original_placements = layout['placements']
                     aligned = align_placements(original_placements)
                     layout['placements'] = aligned
-    '''
+    
     return found_solutions
 # endregion
 
@@ -778,7 +778,7 @@ def align_placements(placements, threshold=5):
         })
         
     # Reordenamos la lista a su orden original si es necesario (opcional, pero buena práctica)
-    aligned.sort(key=lambda p: placements.index(next(o for o in placements if o['id'] == p['id'] and o['x'] == p['x'] and o['y'] == p['y'])))
+    #aligned.sort(key=lambda p: placements.index(next(o for o in placements if o['id'] == p['id'] and o['x'] == p['x'] and o['y'] == p['y'])))
 
     return aligned
 if __name__ == '__main__':
