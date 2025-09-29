@@ -713,51 +713,72 @@ def main(input_path):
 def align_placements(placements, threshold=5):
     """
     Post-procesa los placements para forzar la alineación en una grilla,
-    MOVIENDO los trabajos sin cambiar su tamaño.
+    siguiendo reglas de alineación hacia afuera y sin cambiar el tamaño de las piezas.
     """
     if not placements:
         return []
 
-    # 1. Recolectar solo las coordenadas de INICIO (x, y)
-    x_coords = set(p['x'] for p in placements)
-    y_coords = set(p['y'] for p in placements)
+    # 1. Identificar todas las líneas de corte (inicio y fin)
+    x_coords = set()
+    y_coords = set()
+    for p in placements:
+        x_coords.add(p['x'])
+        x_coords.add(p['x'] + p['width'])
+        y_coords.add(p['y'])
+        y_coords.add(p['y'] + p['length'])
 
-    sorted_x = sorted(list(x_coords))
-    sorted_y = sorted(list(y_coords))
-
-    # 2. Agrupar (cluster) coordenadas cercanas para encontrar las "líneas maestras"
+    # 2. Agrupar (cluster) y definir la línea maestra como la MÁXIMA del grupo
     def cluster_coords(coords):
         if not coords: return {}
+        sorted_coords = sorted(list(coords))
         clusters = []
-        current_cluster = [coords[0]]
-        for i in range(1, len(coords)):
-            if coords[i] - current_cluster[-1] <= threshold:
-                current_cluster.append(coords[i])
+        current_cluster = [sorted_coords[0]]
+        for i in range(1, len(sorted_coords)):
+            if sorted_coords[i] - current_cluster[-1] <= threshold:
+                current_cluster.append(sorted_coords[i])
             else:
                 clusters.append(current_cluster)
-                current_cluster = [coords[i]]
+                current_cluster = [sorted_coords[i]]
         clusters.append(current_cluster)
         
         coord_map = {}
         for cluster in clusters:
-            master_coord = min(cluster)
+            master_coord = max(cluster) # <-- REGLA #2: Alinear al más grande
             for c in cluster:
                 coord_map[c] = master_coord
         return coord_map
 
-    x_map = cluster_coords(sorted_x)
-    y_map = cluster_coords(sorted_y)
+    x_map = cluster_coords(x_coords)
+    y_map = cluster_coords(y_coords)
 
-    # 3. Generar la nueva lista de placements moviendo los trabajos SIN cambiar su tamaño
+    # 3. Ordenar los placements para un procesamiento predecible (REGLA #1)
+    # Ordenamos de abajo a la derecha hacia arriba a la izquierda.
+    sorted_placements = sorted(placements, key=lambda p: (p['y'], p['x']), reverse=True)
+
     aligned = []
-    for p in placements:
+    for p in sorted_placements:
+        # Se alinea el inicio de la pieza a la línea maestra de su grupo
+        aligned_x = x_map.get(p['x'], p['x'])
+        aligned_y = y_map.get(p['y'], p['y'])
+        
+        # También se alinea el final de la pieza a la línea maestra de su grupo
+        aligned_end_x = x_map.get(p['x'] + p['width'], p['x'] + p['width'])
+        aligned_end_y = y_map.get(p['y'] + p['length'], p['y'] + p['length'])
+
+        # Decidimos si alinear por el inicio o por el fin
+        # Si el inicio y el fin caen en clusters diferentes, la pieza podría estirarse.
+        # Para evitarlo, alineamos el inicio y recalculamos el fin para preservar el tamaño.
+        
         aligned.append({
             'id': p['id'],
-            'x': x_map.get(p['x'], p['x']),
-            'y': y_map.get(p['y'], p['y']),
-            'width': p['width'],
-            'length': p['length']
+            'x': aligned_x,
+            'y': aligned_y,
+            'width': p['width'],    # Se MANTIENE el ancho original
+            'length': p['length']   # Se MANTIENE el largo original
         })
+        
+    # Reordenamos la lista a su orden original si es necesario (opcional, pero buena práctica)
+    aligned.sort(key=lambda p: placements.index(next(o for o in placements if o['id'] == p['id'] and o['x'] == p['x'] and o['y'] == p['y'])))
 
     return aligned
 if __name__ == '__main__':
