@@ -147,7 +147,7 @@ def validate_and_create_imposition(sheet_config: Dict, jobs: List, job_files: Di
             user_bleed_pt = user_bleed_mm * (72 / 25.4)
 
             with fitz.open(stream=pdf_content, filetype="pdf") as source_doc:
-                source_page = source_doc
+                source_page = source_doc[0] 
                 trimbox = source_page.trimbox
                 is_source_landscape = trimbox.width > trimbox.height
 
