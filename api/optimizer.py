@@ -522,6 +522,14 @@ def solve_optimal_plan(data, all_jobs, base_layouts, candidate_layouts):
         else:
             log("  > No se encontraron más soluciones.")
             break # Salir del bucle si el solver no encuentra más opciones
+    if found_solutions:
+        for solution in found_solutions:
+            for layout in solution['layouts'].values():
+                if 'placements' in layout:
+                    original_placements = layout['placements']
+                    aligned = align_placements(original_placements)
+                    layout['placements'] = aligned
+    
     return found_solutions
 # endregion
 
@@ -702,6 +710,56 @@ def main(input_path):
 
     return aligned
 '''
+def align_placements(placements, threshold=5):
+    """
+    Post-procesa los placements para forzar la alineación en una grilla,
+    MOVIENDO los trabajos sin cambiar su tamaño.
+    """
+    if not placements:
+        return []
+
+    # 1. Recolectar solo las coordenadas de INICIO (x, y)
+    x_coords = set(p['x'] for p in placements)
+    y_coords = set(p['y'] for p in placements)
+
+    sorted_x = sorted(list(x_coords))
+    sorted_y = sorted(list(y_coords))
+
+    # 2. Agrupar (cluster) coordenadas cercanas para encontrar las "líneas maestras"
+    def cluster_coords(coords):
+        if not coords: return {}
+        clusters = []
+        current_cluster = [coords[0]]
+        for i in range(1, len(coords)):
+            if coords[i] - current_cluster[-1] <= threshold:
+                current_cluster.append(coords[i])
+            else:
+                clusters.append(current_cluster)
+                current_cluster = [coords[i]]
+        clusters.append(current_cluster)
+        
+        coord_map = {}
+        for cluster in clusters:
+            master_coord = min(cluster)
+            for c in cluster:
+                coord_map[c] = master_coord
+        return coord_map
+
+    x_map = cluster_coords(sorted_x)
+    y_map = cluster_coords(sorted_y)
+
+    # 3. Generar la nueva lista de placements moviendo los trabajos SIN cambiar su tamaño
+    aligned = []
+    for p in placements:
+        aligned.append({
+            'id': p['id'],
+            'x': x_map.get(p['x'], p['x']),
+            'y': y_map.get(p['y'], p['y']),
+            'width': p['width'],
+            'length': p['length']
+        })
+
+    return aligned
 if __name__ == '__main__':
     if len(sys.argv) != 2:
         print("Uso: python optimizer.py <ruta_del_archivo_input.json>")
