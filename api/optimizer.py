@@ -369,7 +369,7 @@ def generate_candidate_layouts(data: InputData, all_jobs: Dict[str, Job]):
 
                 for cand in candidates:
                     # Le indicamos al packer que use un algoritmo de guillotina
-                    packer = rectpack.newPacker(pack_algo=guillotine.GuillotineBafSas) 
+                    packer = rectpack.newPacker(pack_algo=guillotine.GuillotineBssfSas) 
                     for job_id, qty in cand['recipe'].items():
                         job = all_jobs[job_id]
                         # Calculamos el tamaño final para el empaquetado
