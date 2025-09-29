@@ -9,7 +9,6 @@ from itertools import chain, combinations, product
 from dataclasses import dataclass, field
 from typing import List, Dict, Any
 import rectpack.guillotine as guillotine
-from rectpack.sort import SORT_AREA
 
 # region ESTRUCTURAS DE DATOS (Actualizadas para el nuevo Input)
 @dataclass
